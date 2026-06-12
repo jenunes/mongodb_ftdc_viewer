@@ -9,4 +9,4 @@ mongodb_ftdc_decoder/
 grafana/backups/
 grafana/DASHBOARD.md
 grafana/dashboards/bkp.json
-grafana/dashboards/my.json
+grafana/dashboards/my.jsonscripts/
