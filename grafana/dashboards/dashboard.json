@@ -1874,6 +1874,119 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
+      "description": "### Network requests\n\nRate of **network.numRequests** — distinct client requests received by mongod.\n\nUse with **Network In / Out** to relate request volume to logical byte throughput.\n\n**Unit:** requests/sec (`reqps`)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.network.numRequests`\n\n---\n\n### How to read\n\n- Single line · request arrival rate\n- Not the same as **Operations** (opcounters) — one request can trigger multiple ops\n\n---\n\n### Troubleshooting\n\n- Sudden drop → client/network issue or load shift\n- Spike without matching **Operations** → lightweight commands (heartbeats, metadata)\n- High rate + high **Network In / Out** bytesOut → large responses · check projections/limits\n\n---\n\n### Docs\n\n- [serverStatus — network](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.network)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*numRequests$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Network requests (/sec)"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 14,
+        "x": 10,
+        "y": 43
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.network.numRequests\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Network Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
       "description": "### Connections\n\n**current**, **active**, and **available** connection counts.\n\n**Unit:** count (gauge)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.connections.current` · `serverStatus.connections.active` · `serverStatus.connections.available`\n\n---\n\n### How to read\n\n- **Current** — all open connections (incl. idle)\n- **Active** — connections running operations\n- **Available** — unused connection slots\n\n---\n\n### Troubleshooting\n\n- **Current** near `maxIncomingConnections` (65536) → pool exhaustion\n- **Active** ≪ **Current** → idle connections · check app pool settings\n- For connection **churn**, see **Connections Created**\n\n---\n\n### Docs\n\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)",
       "fieldConfig": {
         "defaults": {
@@ -1964,14 +2077,39 @@
                 "value": "Available connections"
               }
             ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Active connections",
+                  "Current connections"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": true
+                }
+              }
+            ]
           }
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 6,
         "w": 14,
         "x": 10,
-        "y": 43
+        "y": 48
       },
       "id": 2,
       "options": {
@@ -1983,7 +2121,7 @@
             "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "bottom",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -2124,7 +2262,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Network requests\n\nRate of **network.numRequests** — distinct client requests received by mongod.\n\nUse with **Network In / Out** to relate request volume to logical byte throughput.\n\n**Unit:** requests/sec (`reqps`)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.network.numRequests`\n\n---\n\n### How to read\n\n- Single line · request arrival rate\n- Not the same as **Operations** (opcounters) — one request can trigger multiple ops\n\n---\n\n### Troubleshooting\n\n- Sudden drop → client/network issue or load shift\n- Spike without matching **Operations** → lightweight commands (heartbeats, metadata)\n- High rate + high **Network In / Out** bytesOut → large responses · check projections/limits\n\n---\n\n### Docs\n\n- [serverStatus — network](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.network)",
+      "description": "### Connections created\n\nRate of new connections (`connections.totalCreated` derivative). Indicates connection **churn** — apps opening/closing connections frequently.\n\n**Unit:** connections/sec (`ops`)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.connections.totalCreated`\n\n---\n\n### How to read\n\n- Single line · spikes → bursts of new connections\n- Sustained high rate → pool churn · check app connection pool settings\n\n---\n\n### Troubleshooting\n\n- High rate + high **Current** on **Connections** → many short-lived connections\n- Correlate with **Connections** (counts)\n\n---\n\n### Docs\n\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2136,7 +2274,6 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2165,7 +2302,7 @@
               "mode": "off"
             }
           },
-          "decimals": 1,
+          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -2176,30 +2313,30 @@
               }
             ]
           },
-          "unit": "reqps"
+          "unit": "ops"
         },
         "overrides": [
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*numRequests$"
+              "options": ".*connections\\.totalCreated$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Network requests (/sec)"
+                "value": "Connections created (/sec)"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 14,
         "x": 10,
-        "y": 52
+        "y": 54
       },
-      "id": 28,
+      "id": 52,
       "options": {
         "legend": {
           "calcs": [
@@ -2209,7 +2346,7 @@
             "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "bottom",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -2225,11 +2362,11 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.network.numRequests\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.connections.totalCreated\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
           "refId": "A"
         }
       ],
-      "title": "Network Requests",
+      "title": "Connections Created",
       "type": "timeseries"
     },
     {
@@ -2331,7 +2468,7 @@
         ]
       },
       "gridPos": {
-        "h": 9,
+        "h": 10,
         "w": 10,
         "x": 0,
         "y": 56
@@ -2374,7 +2511,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Connections created\n\nRate of new connections (`connections.totalCreated` derivative). Indicates connection **churn** — apps opening/closing connections frequently.\n\n**Unit:** connections/sec (`ops`)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.connections.totalCreated`\n\n---\n\n### How to read\n\n- Single line · spikes → bursts of new connections\n- Sustained high rate → pool churn · check app connection pool settings\n\n---\n\n### Troubleshooting\n\n- High rate + high **Current** on **Connections** → many short-lived connections\n- Correlate with **Connections** (counts)\n\n---\n\n### Docs\n\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)",
+      "description": "### Cursors\n\n**Open cursors** from **`metrics.cursor.open.*`** (current count, gauge). **`metrics.cursor.timedOut`** is a **cumulative counter** — shown here as **timeouts per second** (derivative).\n\n**Unit:** count (`short`) for open · timeouts/sec (`ops`) for timed out rate\n\n---\n\n### Metrics\n\n**Fields (open — gauge, `last`):**\n\n- `serverStatus.metrics.cursor.open.total`\n- `serverStatus.metrics.cursor.open.noTimeout`\n- `serverStatus.metrics.cursor.open.pinned`\n\n**Field (timeouts — counter, `derivative(1s)`):**\n\n- `serverStatus.metrics.cursor.timedOut`\n\n---\n\n### How to read\n\n- **Open total** — cursors mongod holds for clients; usually small\n- **Open (no timeout)** / **Open (pinned)** — subsets of total\n- **Timed out (/sec)** — idle cursors killed (default cursor timeout ~10 min)\n- **stepAfter** on open lines reflects discrete count changes\n\n---\n\n### Troubleshooting\n\n- **Open total** rising → possible cursor leak (app not closing/exhausting cursors)\n- **Timed out (/sec)** rising → clients abandoning cursors · correlate with **Operations** (getmore/query)\n- Tailable / pinned cursors can keep **open** elevated without a leak\n\n---\n\n### Docs\n\n- [serverStatus — metrics.cursor](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.cursor)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2386,6 +2523,217 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.open\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Open total"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepAfter"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.open\\.noTimeout$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Open (no timeout)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepAfter"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.open\\.pinned$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Open (pinned)"
+              },
+              {
+                "id": "unit",
+                "value": "short"
+              },
+              {
+                "id": "decimals",
+                "value": 0
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "stepAfter"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.timedOut$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Timed out (/sec)"
+              },
+              {
+                "id": "unit",
+                "value": "ops"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              },
+              {
+                "id": "custom.lineInterpolation",
+                "value": "linear"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 14,
+        "x": 10,
+        "y": 60
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.cursor.open.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.cursor.open.noTimeout\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.cursor.open.pinned\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "hide": false,
+          "query": "from(bucket: v.defaultBucket)\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.metrics.cursor.timedOut\")\n  |> drop(columns: [\"hostname\", \"version\"])\n  |> derivative(unit: 1s, nonNegative: true)\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "B"
+        }
+      ],
+      "title": "Cursors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Admin Commands (metrics.commands)\n\nPer-second rate of selected **`serverStatus.metrics.commands.*.total`** counters — admin/catalog-style commands tracked individually by MongoDB.\n\n**Not** the same as **Operations** (`opcounters.command`), which aggregates most command types except insert, update, delete, and aggregate.\n\n**Unit:** commands per second (`ops`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.commands.createIndexes.total`\n- `serverStatus.metrics.commands.dataSize.total`\n- `serverStatus.metrics.commands.dropIndexes.total`\n- `serverStatus.metrics.commands.listCollections.total`\n- `serverStatus.metrics.commands.listDatabases.total`\n- `serverStatus.metrics.commands.listIndexes.total`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → cmds/sec\n\n---\n\n### How to read\n\n- One line per command counter above\n- Spikes on **listCollections** / **listDatabases** / **listIndexes** → metadata/catalog traffic (drivers, tools, monitoring)\n- Spikes on **createIndexes** / **dropIndexes** → schema/index maintenance\n- **dataSize** → `dataSize` command usage\n\n---\n\n### Troubleshooting\n\n- Sustained high list* rates → chatty clients or health checks · compare with **Network Requests**\n- Index build bursts → **createIndexes** + **CPU Usage** + **Disk I/O**\n- For overall op mix, use **Operations**; for document volume, **Documents**\n\n---\n\n### Docs\n\n- [serverStatus — metrics.commands](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.commands)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -2414,7 +2762,6 @@
               "mode": "off"
             }
           },
-          "decimals": 2,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -2431,24 +2778,84 @@
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*connections\\.totalCreated$"
+              "options": ".*\\.createIndexes\\.total$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Connections created (/sec)"
+                "value": "createIndexes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.dropIndexes\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "dropIndexes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.listCollections\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "listCollections"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.listDatabases\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "listDatabases"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.listIndexes\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "listIndexes"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.dataSize\\.total$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "dataSize"
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 14,
-        "x": 10,
-        "y": 57
+        "h": 8,
+        "w": 10,
+        "x": 0,
+        "y": 66
       },
-      "id": 52,
+      "id": 32,
       "options": {
         "legend": {
           "calcs": [
@@ -2463,7 +2870,7 @@
         },
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -2474,11 +2881,11 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.connections.totalCreated\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.createIndexes.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.dataSize.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.dropIndexes.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.listCollections.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.listDatabases.total\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.commands.listIndexes.total\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
           "refId": "A"
         }
       ],
-      "title": "Connections Created",
+      "title": "Admin Commands",
       "type": "timeseries"
     },
     {
@@ -2607,7 +3014,7 @@
         "h": 7,
         "w": 14,
         "x": 10,
-        "y": 63
+        "y": 66
       },
       "id": 15,
       "options": {
@@ -2619,7 +3026,7 @@
             "lastNotNull"
           ],
           "displayMode": "table",
-          "placement": "bottom",
+          "placement": "right",
           "showLegend": true
         },
         "tooltip": {
@@ -2640,136 +3047,6 @@
         }
       ],
       "title": "Replica Members Lag",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "### Flow control is lagged\n\nBoolean **`flowControl.isLagged`** — whether flow control is **currently** throttling writes on the **primary**.\n\n**Unit:** 0 = off · 1 = on\n\n**Note:** Primary only; secondaries return placeholders. For **time spent** throttled, see **Flow control lagged time**.\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.flowControl.isLagged`\n\n---\n\n### How to read\n\n- **0** → not engaging (even if secondaries lag)\n- **1** → primary write rate limited so secondaries can catch up\n\n---\n\n### Troubleshooting\n\n- **1** sustained → **Replica Members Lag**, **Opcounters Replica**, secondary disk/network\n- Lag without **1** → lag below `flowControlTargetLagSeconds` threshold\n\n---\n\n### Docs\n\n- [serverStatus — flowControl](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.flowControl)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMax": 1,
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 2,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 0,
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "index": 0,
-                  "text": "Off"
-                },
-                "1": {
-                  "index": 1,
-                  "text": "On"
-                }
-              },
-              "type": "value"
-            }
-          ],
-          "max": 1,
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": ".*isLagged$"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Flow control engaged"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 10,
-        "x": 0,
-        "y": 65
-      },
-      "id": 14,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.flowControl.isLagged\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
-          "refId": "A"
-        }
-      ],
-      "title": "FlowControl isLagged",
       "type": "timeseries"
     },
     {
@@ -2895,12 +3172,160 @@
         ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 9,
+        "h": 6,
+        "w": 14,
         "x": 10,
-        "y": 70
+        "y": 73
       },
       "id": 25,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "right",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"replSetGetStatus.members.0.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.1.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.2.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.3.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.4.pingMs\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Replica Members Ping",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Document metrics (deleted / inserted / returned / updated)\n\nPer-second rate of **`serverStatus.metrics.document`** counters — document-level access and modification (not the same as **Operations** / opcounters: one op can touch many documents).\n\n**Unit:** documents per second (`ops`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.document.deleted`\n- `serverStatus.metrics.document.inserted`\n- `serverStatus.metrics.document.returned`\n- `serverStatus.metrics.document.updated`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → docs/sec\n\n---\n\n### How to read\n\n- Four lines: delete, insert, return, update **rates**\n- **Returned** high with low **Scanned / Returned Ratio** → efficient reads\n- **Returned** high with high ratio → scans without good targeting · **Query Executor**\n\n---\n\n### Troubleshooting\n\n- High **deleted** → TTL indexes, bulk cleanup, or churn\n- High **returned** + high **Scanned / Returned Ratio** → missing/suboptimal indexes · run `explain()`\n- Compare with **Operations** (op-level) and **Opcounters Replica** on secondaries\n\n---\n\n### Docs\n\n- [serverStatus — metrics.document](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.document)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.document\\.deleted$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Documents deleted"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.document\\.inserted$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Documents inserted"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.document\\.returned$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Documents returned"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.document\\.updated$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Documents updated"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 10,
+        "x": 0,
+        "y": 74
+      },
+      "id": 36,
       "options": {
         "legend": {
           "calcs": [
@@ -2926,11 +3351,141 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"replSetGetStatus.members.0.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.1.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.2.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.3.pingMs\" or\r\n      r[\"_field\"] == \"replSetGetStatus.members.4.pingMs\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.document.deleted\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.document.inserted\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.document.returned\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.document.updated\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
           "refId": "A"
         }
       ],
-      "title": "Replica Members Ping",
+      "title": "Documents (deleted / inserted / returned / updated)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Flow control is lagged\n\nBoolean **`flowControl.isLagged`** — whether flow control is **currently** throttling writes on the **primary**.\n\n**Unit:** 0 = off · 1 = on\n\n**Note:** Primary only; secondaries return placeholders. For **time spent** throttled, see **Flow control lagged time**.\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.flowControl.isLagged`\n\n---\n\n### How to read\n\n- **0** → not engaging (even if secondaries lag)\n- **1** → primary write rate limited so secondaries can catch up\n\n---\n\n### Troubleshooting\n\n- **1** sustained → **Replica Members Lag**, **Opcounters Replica**, secondary disk/network\n- Lag without **1** → lag below `flowControlTargetLagSeconds` threshold\n\n---\n\n### Docs\n\n- [serverStatus — flowControl](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.flowControl)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMax": 1,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 2,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 0,
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "index": 0,
+                  "text": "Off"
+                },
+                "1": {
+                  "index": 1,
+                  "text": "On"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*isLagged$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Flow control engaged"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 14,
+        "x": 10,
+        "y": 79
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.flowControl.isLagged\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "FlowControl isLagged",
       "type": "timeseries"
     },
     {
@@ -3012,9 +3567,9 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 10,
-        "x": 0,
-        "y": 71
+        "w": 14,
+        "x": 10,
+        "y": 84
       },
       "id": 53,
       "options": {
@@ -3047,820 +3602,6 @@
         }
       ],
       "title": "Flow control lagged time",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.opcounters per second by type: insert, query, update, delete, getmore, command. Per MongoDB docs, opcounters treats operations that affect multiple documents (bulk insert, multi-update) as a single operation. These values reflect received operations and increment even when operations are not successful. opcounters.command counts all commands except insert, update, delete, and aggregate (serverStatus.opcounters).\n\nHow to read: multiple lines showing ops/sec per operation type (derivative of cumulative counters).\n\nTroubleshooting: sudden drops may indicate blocking -- check 'Current Queue writers / readers' and 'WiredTiger Tickets'. Sudden spikes may cause resource contention. Use alongside 'Average Operation Latency' to distinguish throughput-driven from latency-driven performance issues.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "stepAfter",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 7,
-        "x": 10,
-        "y": 75
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => \r\n      r[\"_field\"] == \"serverStatus.opcounters.update\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.query\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.insert\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.getmore\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.delete\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.command\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Operations",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.metrics.document counters per second: deleted, inserted, returned, updated. Per MongoDB docs, metrics.document reflects document access and modification patterns. Compare with opcounters, which tracks total number of operations -- since one query can return many documents (serverStatus.metrics.document).\n\nHow to read: four lines showing document-level operation rates.\n\nTroubleshooting: high 'returned' with low 'scannedObjects' (from 'Query Executor') indicates efficient queries. High 'returned' with high 'scannedObjects' means poor query targeting. High 'deleted' may indicate TTL index activity or bulk cleanup operations.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 77
-      },
-      "id": 36,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.metrics.document.updated\" or r[\"_field\"] == \"serverStatus.metrics.document.returned\" or r[\"_field\"] == \"serverStatus.metrics.document.inserted\" or r[\"_field\"] == \"serverStatus.metrics.document.deleted\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: v.windowPeriod)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Documents (deleted / inserted / returned / updated)",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Ratio of serverStatus.metrics.queryExecutor.scannedObjects to metrics.document.returned, computed as a per-second rate ratio. Per MongoDB docs, scannedObjects is equivalent to totalDocsExamined in explain(); document.returned is the total number of documents returned by queries (serverStatus.metrics.queryExecutor, serverStatus.metrics.document).\n\nHow to read: single line showing the scanned-to-returned ratio. A ratio of 1.0 means every scanned document was returned (perfect targeting).\n\nTroubleshooting: ratios significantly above 1.0 indicate queries scanning many documents to return few results -- the classic sign of missing or suboptimal indexes. This is often the number one cause of unnecessary disk I/O and CPU load. Run explain() on slow queries to identify the problem.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 4,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "decimals": 2,
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 7,
-        "x": 10,
-        "y": 82
-      },
-      "id": 37,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.document.returned\" or \r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> pivot(\r\n      rowKey: [\"_time\"],\r\n      columnKey: [\"_field\"],\r\n      valueColumn: \"_value\"\r\n  )\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      scanned_returned_ratio:\r\n        if r[\"serverStatus.metrics.document.returned\"] > 0.0\r\n        then r[\"serverStatus.metrics.queryExecutor.scannedObjects\"]\r\n             / r[\"serverStatus.metrics.document.returned\"]\r\n        else 0.0\r\n  }))\r\n  |> yield(name: \"scanned_returned_ratio\")\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Query Targeting: Scanned Objects / Returned",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.metrics.commands per second. Per MongoDB docs, metrics.commands reports on the use of database commands. opcounters.command counts all commands except insert, update, delete, and aggregate (serverStatus.metrics.commands, serverStatus.opcounters).\n\nHow to read: single line showing command execution rate.\n\nTroubleshooting: a spike in command rate may indicate runaway aggregation pipelines, administrative operations (index builds, compact), or driver heartbeat storms. Correlate with 'Average Operation Latency' and 'CPU Usage' to assess impact.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 84
-      },
-      "id": 32,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.metrics.commands.createIndexes.total\" or r[\"_field\"] == \"serverStatus.metrics.commands.dataSize.total\" or r[\"_field\"] == \"serverStatus.metrics.commands.dropIndexes.total\" or r[\"_field\"] == \"serverStatus.metrics.commands.listCollections.total\" or r[\"_field\"] == \"serverStatus.metrics.commands.listDatabases.total\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n|> derivative(unit: v.windowPeriod)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Commands",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.metrics.queryExecutor metrics: scanned (total index items scanned, equivalent to totalKeysExamined in explain()), scannedObjects (total documents scanned, equivalent to totalDocsExamined), and collectionScans.total (queries that performed a collection scan) per second (serverStatus.metrics.queryExecutor).\n\nHow to read: multiple lines showing rates. High scannedObjects means many documents examined; high collectionScans.total means queries are not using indexes.\n\nTroubleshooting: high scannedObjects relative to documents returned indicates inefficient queries -- run explain() to identify missing indexes. High collectionScans.total is a red flag for production workloads; identify the queries via the profiler.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "short"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 9,
-        "x": 10,
-        "y": 88
-      },
-      "id": 31,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\" or r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scanned\" or r[\"_field\"] == \"serverStatus.metrics.queryExecutor.collectionScans.total\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: v.windowPeriod)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Query Executor",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Shows serverStatus.metrics.cursor.open.total -- the number of cursors MongoDB is maintaining for clients. Per MongoDB docs, typically this value is small or zero; however, if there is a queue, stale tailable cursors, or a large number of operations, this value may increase. metrics.cursor.timedOut tracks cursors that timed out (serverStatus.metrics.cursor).\n\nHow to read: single line showing open cursor count over time.\n\nTroubleshooting: a growing cursor count may indicate cursor leaks in the application (not calling close()). Cursor timeouts (default 10 min) normally clean up idle cursors. If timedOut is also growing, applications are abandoning cursors without exhausting or closing them.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 7,
-        "x": 0,
-        "y": 90
-      },
-      "id": 33,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.metrics.cursor.open.noTimeout\" or r[\"_field\"] == \"serverStatus.metrics.cursor.open.pinned\" or r[\"_field\"] == \"serverStatus.metrics.cursor.open.total\" or r[\"_field\"] == \"serverStatus.metrics.cursor.timedOut\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Cursors",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.opLatencies.reads.ops, opLatencies.writes.ops, and opLatencies.commands.ops per second. Per MongoDB docs, opLatencies contains operation latencies for the instance as a whole (serverStatus.opLatencies).\n\nHow to read: three lines showing the operation rate (ops/sec) per latency class -- this is the denominator used to compute average latency.\n\nTroubleshooting: compare with 'Average Operation Latency' -- if ops/sec drops while latency rises, individual operations are getting slower. If both rise together, the system is under increased load. A divergence between reads.ops and writes.ops can indicate workload imbalance.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "µs"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 8,
-        "y": 94
-      },
-      "id": 10,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.opLatencies.reads.ops\" or r[\"_field\"] == \"serverStatus.opLatencies.writes.ops\" or r[\"_field\"] == \"serverStatus.opLatencies.commands.ops\" )\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Operations Latencies Op",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Shows dbStats.avgObjSize -- the average size of each document in bytes, computed as dataSize divided by the number of documents. Per MongoDB docs, the scale argument does not affect avgObjSize (dbStats.avgObjSize).\n\nHow to read: single line showing average document size over time.\n\nTroubleshooting: a sudden increase may indicate documents growing from array pushes or embedded document growth, which affects WiredTiger cache efficiency, network bandwidth, and replication lag. A decrease after TTL cleanup or data migration is expected.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 9,
-        "x": 7,
-        "y": 99
-      },
-      "id": 34,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean",
-            "lastNotNull"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"local.oplog.rs.stats.storageStats.avgObjSize\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "avg Obj Size",
       "type": "timeseries"
     },
     {
@@ -3953,7 +3694,7 @@
         "h": 7,
         "w": 10,
         "x": 0,
-        "y": 105
+        "y": 86
       },
       "id": 29,
       "options": {
@@ -3993,7 +3734,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "Rate of serverStatus.opcountersRepl per second: insert, query, update, delete, getmore, command. Per MongoDB docs, opcountersRepl reports on database replication operations by type since the mongod instance last started. These numbers grow over time until the next restart (serverStatus.opcountersRepl).\n\nHow to read: multiple lines showing replication operation rates.\n\nTroubleshooting: on a secondary, this shows how fast replication operations are being applied. If this rate drops while the primary's 'Operations' panel shows high throughput, the secondary is falling behind. Correlate with 'Replica Members Lag' and secondary disk I/O.",
+      "description": "### Query executor\n\nPer-second rates from **queryExecutor** counters — how much work the query engine does examining indexes and documents.\n\n**Unit:** operations/sec (`ops`) — keys scanned, docs scanned, and collection-scan events are all counter derivatives.\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.queryExecutor.scanned` — index keys examined (`totalKeysExamined` in explain())\n- `serverStatus.metrics.queryExecutor.scannedObjects` — documents examined (`totalDocsExamined`)\n- `serverStatus.metrics.queryExecutor.collectionScans.total` — queries that performed a **collection scan** (COLLSCAN)\n\nAll are cumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`**.\n\n---\n\n### How to read\n\n- **Index keys scanned / sec** — index traversal volume\n- **Documents scanned / sec** — document examination volume (often dominates I/O)\n- **Collection scans / sec** (right axis) — queries **not** using a useful index; should stay near **0** in production\n\n**Keys vs docs:** high docs with low keys can mean wide index scans or many docs per key; high docs with high **Collection scans** confirms COLLSCAN.\n\nCompare with **Query Targeting: Scanned Objects / Returned** (ratio) and **Documents** (`document.returned`).\n\n---\n\n### Troubleshooting\n\n- High **Documents scanned** + high targeting ratio → missing/poor indexes · run `explain()` on slow queries\n- Sustained **Collection scans / sec** → enable profiler / Performance Advisor · fix query patterns or add indexes\n- High scan rates + **Page Faults** / **Disk I/O** → storage pressure from inefficient reads\n- **Operations** `opcounters.query` rising with scan rates → read-heavy workload under index stress\n\n---\n\n### Docs\n\n- [serverStatus — metrics.queryExecutor](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.queryExecutor)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4005,6 +3746,432 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.metrics.queryExecutor.scanned"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Index keys scanned / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.metrics.queryExecutor.scannedObjects"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Documents scanned / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.metrics.queryExecutor.collectionScans.total"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Collection scans / sec"
+              },
+              {
+                "id": "custom.axisPlacement",
+                "value": "right"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 14,
+        "x": 10,
+        "y": 90
+      },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scanned\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.collectionScans.total\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Query Executor",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Oplog average entry size\n\nAverage size in **bytes** of documents in the **`local.oplog.rs`** capped collection (`collStats` / `storageStats.avgObjSize`).\n\n**Unit:** bytes (`bytes`)\n\n**Not `dbStats.avgObjSize`:** FTDC exposes oplog collStats here, not per-database average user document size.\n\n---\n\n### Metrics\n\n**Field:** `local.oplog.rs.stats.storageStats.avgObjSize`\n\nSnapshot gauge — **`aggregateWindow(..., fn: last)`**, no derivative.\n\n---\n\n### How to read\n\n- Single line · **Oplog avg entry size**\n- Rises when writes carry larger payloads (big documents, wide updates, bulk ops)\n- Slow drift over days → changing write patterns or schema\n- Compare with **Storage Size** (`local.oplog.rs` `storageSize` / `freeStorageSize`)\n\n---\n\n### Troubleshooting\n\n- Step change + write workload shift → larger oplog entries · more replication network/disk\n- High avg size + lag → secondary apply pressure · check **Replica Members Lag**\n- **Arbiter / standalone** may show no or stale series (no meaningful oplog)\n- For **user collection** document sizing → `db.collection.stats().avgObjSize` (not in this FTDC export)\n\n---\n\n### Docs\n\n- [collStats — avgObjSize](https://www.mongodb.com/docs/manual/reference/command/collStats/)\n- [Change oplog size](https://www.mongodb.com/docs/manual/tutorial/change-oplog-size/)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "local.oplog.rs.stats.storageStats.avgObjSize"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Oplog avg entry size"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 10,
+        "x": 0,
+        "y": 93
+      },
+      "id": 34,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"local.oplog.rs.stats.storageStats.avgObjSize\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Oplog average entry size",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Operations (opcounters)\n\nPer-second rate of **`serverStatus.opcounters`** — **operation-level** counts (one bulk/multi-doc op = one op). Not the same as **Documents** (`metrics.document`), which counts documents touched.\n\n**Unit:** operations per second (`ops`)\n\n**Note:** `opcounters.command` includes most commands except insert, update, delete, and **aggregate** (see MongoDB docs).\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.opcounters.command`\n- `serverStatus.opcounters.delete`\n- `serverStatus.opcounters.getmore`\n- `serverStatus.opcounters.insert`\n- `serverStatus.opcounters.query`\n- `serverStatus.opcounters.update`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → ops/sec\n\n---\n\n### How to read\n\n- Six lines: command, delete, getmore, insert, query, update **rates**\n- Sudden drop → blocking or idle period\n- Spike → load burst; check **Average Operation Latency** and **WiredTiger Tickets**\n\n---\n\n### Troubleshooting\n\n- Sustained high write ops + latency → **Current Queue writers / readers**, disk I/O\n- High **query** + **getmore** → cursor-heavy workload\n- On secondaries, use **Opcounters Replica** instead of this panel\n\n---\n\n### Docs\n\n- [serverStatus — opcounters](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opcounters)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.command$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Command"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.delete$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Delete"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.getmore$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Getmore"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.insert$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Insert"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.query$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Query"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.opcounters\\.update$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Update"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 12,
+        "x": 0,
+        "y": 99
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.opcounters.command\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.delete\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.getmore\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.insert\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.query\" or\r\n      r[\"_field\"] == \"serverStatus.opcounters.update\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Operations",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Replication opcounters (If secondary)\n\nPer-second rates from **`serverStatus.opcountersRepl`** — operations applied when this member is acting as a **secondary** (oplog apply).\n\n**Unit:** operations/sec (`ops`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.opcountersRepl.insert`\n- `serverStatus.opcountersRepl.query`\n- `serverStatus.opcountersRepl.update`\n- `serverStatus.opcountersRepl.delete`\n- `serverStatus.opcountersRepl.getmore`\n- `serverStatus.opcountersRepl.command`\n\nCumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`**.\n\n---\n\n### How to read\n\n- Six lines · replication apply rate by type\n- **View a secondary hostname** — answers “how fast is this node applying replication?”\n- **Primary / write source** — expect near-zero or unhelpful lines; switch host or open **Operations (write source)**\n- Fractional ops/sec → normal with sparse FTDC sampling\n- **0** → idle or no replication apply in window\n\nCompare with **Operations (write source)** on the primary, **Replica Members Lag**, **Flow control is lagged**.\n\n---\n\n### Troubleshooting\n\n- Repl rates drop + **lag rising** → secondary cannot keep up · disk I/O, CPU, **Disk I/O**\n- Primary **Operations (write source)** high, secondary repl low → bottleneck on secondary\n- Repl **update** ≫ primary **update** → expected replication amplification\n- **Flow control is lagged** = 1 + lag → primary throttling writes\n\n---\n\n### Docs\n\n- [serverStatus — opcountersRepl](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opcountersRepl)\n- [serverStatus — opcounters](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opcounters)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4040,22 +4207,91 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
           "unit": "ops"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.insert"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Insert / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.query"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Query / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.update"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Update / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.delete"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Delete / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.getmore"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Getmore / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opcountersRepl.command"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Command / sec"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
-        "h": 7,
-        "w": 9,
-        "x": 10,
-        "y": 105
+        "h": 11,
+        "w": 12,
+        "x": 12,
+        "y": 99
       },
       "id": 38,
       "options": {
@@ -4083,11 +4319,260 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.opcountersRepl.command\" or r[\"_field\"] == \"serverStatus.opcountersRepl.delete\" or r[\"_field\"] == \"serverStatus.opcountersRepl.getmore\" or r[\"_field\"] == \"serverStatus.opcountersRepl.insert\" or r[\"_field\"] == \"serverStatus.opcountersRepl.query\" or r[\"_field\"] == \"serverStatus.opcountersRepl.update\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: v.windowPeriod)\r\n    |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.insert\" or\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.query\" or\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.update\" or\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.delete\" or\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.getmore\" or\r\n      r[\"_field\"] == \"serverStatus.opcountersRepl.command\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
           "refId": "A"
         }
       ],
-      "title": "Opcounters Replica",
+      "title": "Opcounters Replica (If secondary)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Operation latency ops\n\nPer-second rates from **opLatencies.*.ops** counters — how many read, write, and command operations ran in each latency class.\n\n**Unit:** operations/sec (`ops`)\n\nThis is the **denominator** for **Average Operation Latency** (`derivative(latency) / derivative(ops)` → µs/op).\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.opLatencies.reads.ops`\n- `serverStatus.opLatencies.writes.ops`\n- `serverStatus.opLatencies.commands.ops`\n\nCumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`**.\n\n**Not the same as opcounters:** `opLatencies` groups reads / writes / commands for latency stats; **Operations** uses `opcounters.*` (query, insert, update, delete, getmore, command).\n\n---\n\n### How to read\n\n- **Read / write / command ops / sec** — throughput per latency class\n- **Commands** often includes admin, aggregate, and other command work\n- Fractional values → normal with sparse FTDC sampling\n- **0** → idle window for that class\n\nCompare with **Average Operation Latency** (numerator/denominator) and **Operations** (opcounters workload mix).\n\n---\n\n### Troubleshooting\n\n- **Ops up, avg latency up** → load + slower per-op work\n- **Ops down, avg latency up** → fewer ops but each slower (contention, I/O)\n- **Ops up, avg latency flat** → healthy scale-out of throughput\n- Read/write imbalance → workload skew · correlate with **Query Executor**, **Documents**, **Disk I/O**\n\n---\n\n### Docs\n\n- [serverStatus — opLatencies](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opLatencies)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "stepAfter",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opLatencies.reads.ops"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Read ops / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opLatencies.writes.ops"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Write ops / sec"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "serverStatus.opLatencies.commands.ops"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Command ops / sec"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 9,
+        "w": 24,
+        "x": 0,
+        "y": 110
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.opLatencies.reads.ops\" or\r\n      r[\"_field\"] == \"serverStatus.opLatencies.writes.ops\" or\r\n      r[\"_field\"] == \"serverStatus.opLatencies.commands.ops\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
+          "refId": "A"
+        }
+      ],
+      "title": "Operation Latency Ops",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Query targeting: scanned objects / returned\n\nRatio of **document scan rate** to **document return rate**:\n\n**Formula:** `derivative(scannedObjects, 1s) / derivative(document.returned, 1s)`\n\nSame idea as **totalDocsExamined / docs returned** in explain() — aggregated over time.\n\n**Unit:** dimensionless ratio (`none`) — **1.0** ≈ one doc examined per doc returned\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.queryExecutor.scannedObjects`\n- `serverStatus.metrics.document.returned`\n\nBoth are cumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`** before the ratio.\n\n---\n\n### How to read\n\n- Single line · **Scanned / returned ratio**\n- **~1** → strong targeting (most examined docs were returned)\n- **> 1** (especially **10+**) → scans dominate · missing/poor indexes or large in-memory filters\n- **0** → no returned docs in window (idle) or zero denominator — **not** “perfect”\n\n---\n\n### Troubleshooting\n\n- High ratio + high **Documents returned** → **Query Executor** · run `explain()` on hot queries\n- Correlate with **Page Faults**, **Disk I/O**, **Average Operation Latency**\n- **Collection scans** panel (if present) confirms full collection scans\n\n---\n\n### Docs\n\n- [serverStatus — metrics.queryExecutor](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.queryExecutor)\n- [serverStatus — metrics.document](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.document)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "scanned_returned_ratio"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Scanned / returned ratio"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 119
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean",
+            "lastNotNull"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.document.returned\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      scanned_returned_ratio:\r\n        if exists r[\"serverStatus.metrics.document.returned\"]\r\n           and float(v: r[\"serverStatus.metrics.document.returned\"]) > 0.0\r\n           and exists r[\"serverStatus.metrics.queryExecutor.scannedObjects\"]\r\n        then float(v: r[\"serverStatus.metrics.queryExecutor.scannedObjects\"])\r\n             / float(v: r[\"serverStatus.metrics.document.returned\"])\r\n        else 0.0\r\n    }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Query Targeting: Scanned Objects / Returned",
       "type": "timeseries"
     },
     {
@@ -4096,7 +4581,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 112
+        "y": 125
       },
       "id": 21,
       "panels": [],
@@ -4170,7 +4655,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 113
+        "y": 126
       },
       "id": 13,
       "options": {
@@ -4272,7 +4757,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 122
+        "y": 135
       },
       "id": 40,
       "options": {
@@ -4374,7 +4859,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 122
+        "y": 135
       },
       "id": 39,
       "options": {
@@ -4476,7 +4961,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 130
+        "y": 143
       },
       "id": 35,
       "options": {
@@ -4578,7 +5063,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 130
+        "y": 143
       },
       "id": 17,
       "options": {
@@ -4680,7 +5165,7 @@
         "h": 7,
         "w": 8,
         "x": 16,
-        "y": 130
+        "y": 143
       },
       "id": 43,
       "options": {
@@ -4782,7 +5267,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 137
+        "y": 150
       },
       "id": 4,
       "options": {
@@ -4884,7 +5369,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 137
+        "y": 150
       },
       "id": 46,
       "options": {
@@ -4995,7 +5480,7 @@
         "h": 5,
         "w": 8,
         "x": 0,
-        "y": 143
+        "y": 156
       },
       "id": 11,
       "options": {
@@ -5097,7 +5582,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 144
+        "y": 157
       },
       "id": 41,
       "options": {
@@ -5199,7 +5684,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 148
+        "y": 161
       },
       "id": 47,
       "options": {
@@ -5311,7 +5796,7 @@
         "h": 7,
         "w": 8,
         "x": 8,
-        "y": 151
+        "y": 164
       },
       "id": 45,
       "options": {
@@ -5413,7 +5898,7 @@
         "h": 7,
         "w": 8,
         "x": 0,
-        "y": 155
+        "y": 168
       },
       "id": 18,
       "options": {
@@ -5524,7 +6009,7 @@
         "h": 6,
         "w": 8,
         "x": 8,
-        "y": 158
+        "y": 171
       },
       "id": 51,
       "options": {
@@ -5626,7 +6111,7 @@
         "h": 5,
         "w": 8,
         "x": 0,
-        "y": 162
+        "y": 175
       },
       "id": 42,
       "options": {
@@ -5727,7 +6212,7 @@
         "h": 7,
         "w": 7,
         "x": 8,
-        "y": 164
+        "y": 177
       },
       "id": 30,
       "options": {
@@ -5829,7 +6314,7 @@
         "h": 5,
         "w": 8,
         "x": 0,
-        "y": 167
+        "y": 180
       },
       "id": 44,
       "options": {
@@ -5931,7 +6416,7 @@
         "h": 6,
         "w": 8,
         "x": 0,
-        "y": 172
+        "y": 185
       },
       "id": 50,
       "options": {
