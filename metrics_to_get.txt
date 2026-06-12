@@ -150,3 +150,8 @@ replSetGetStatus.members.1.lastAppliedWallTime
 replSetGetStatus.members.2.lastAppliedWallTime
 replSetGetStatus.members.3.lastAppliedWallTime
 replSetGetStatus.members.4.lastAppliedWallTime
+replSetGetStatus.members.0.state
+replSetGetStatus.members.1.state
+replSetGetStatus.members.2.state
+replSetGetStatus.members.3.state
+replSetGetStatus.members.4.state
