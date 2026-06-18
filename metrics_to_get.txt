@@ -155,3 +155,8 @@ replSetGetStatus.members.1.state
 replSetGetStatus.members.2.state
 replSetGetStatus.members.3.state
 replSetGetStatus.members.4.state
+replSetGetStatus.members.0.name
+replSetGetStatus.members.1.name
+replSetGetStatus.members.2.name
+replSetGetStatus.members.3.name
+replSetGetStatus.members.4.name

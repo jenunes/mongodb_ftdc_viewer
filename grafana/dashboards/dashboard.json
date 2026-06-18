@@ -22,6 +22,19 @@
   "links": [],
   "panels": [
     {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 55,
+      "panels": [],
+      "title": "Mongo Health",
+      "type": "row"
+    },
+    {
       "datasource": {
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
@@ -96,10 +109,10 @@
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 6,
+        "h": 5,
+        "w": 12,
         "x": 0,
-        "y": 0
+        "y": 1
       },
       "id": 20,
       "options": {
@@ -128,6 +141,208 @@
       ],
       "title": "Server Uptime",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### ReplSet member states\n\n**`replSetGetStatus.members.N.state`** over the selected time range (same codes as [replica states](https://www.mongodb.com/docs/manual/reference/replica-states/)).\n\n**Note:** Row labels use member **array index** unless `members.N.name` is ingested. Failover shows PRIMARY moving between rows. Primary-only FTDC filter via **hostname**.\n\n---\n\n### Metrics\n\n**Fields:** `replSetGetStatus.members.0.state` … (through your max index)\n\n---\n\n### How to read\n\n- One row per member index\n- Colored band = role · **PRIMARY** (1), **SECONDARY** (2), etc.\n- Red bands = DOWN, RECOVERING, ROLLBACK, …\n\n---\n\n### Docs\n\n- [replSetGetStatus](https://www.mongodb.com/docs/manual/reference/command/replSetGetStatus/)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "blue",
+            "mode": "fixed"
+          },
+          "custom": {
+            "axisPlacement": "auto",
+            "fillOpacity": 100,
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineWidth": 0,
+            "spanNulls": false
+          },
+          "mappings": [
+            {
+              "options": {
+                "0": {
+                  "color": "semi-dark-red",
+                  "index": 11,
+                  "text": "STARTUP"
+                },
+                "1": {
+                  "color": "rgb(107, 152, 102)",
+                  "index": 4,
+                  "text": "PRIMARY"
+                },
+                "2": {
+                  "color": "rgb(193, 159, 20)",
+                  "index": 3,
+                  "text": "SECONDARY"
+                },
+                "3": {
+                  "color": "semi-dark-red",
+                  "index": 10,
+                  "text": "RECOVERING"
+                },
+                "4": {
+                  "color": "semi-dark-red",
+                  "index": 12,
+                  "text": "FATAL"
+                },
+                "5": {
+                  "color": "semi-dark-red",
+                  "index": 9,
+                  "text": "STARTUP2"
+                },
+                "6": {
+                  "color": "semi-dark-red",
+                  "index": 8,
+                  "text": "UNKNOWN"
+                },
+                "7": {
+                  "color": "#8B8000",
+                  "index": 1,
+                  "text": "ARBITER"
+                },
+                "8": {
+                  "color": "semi-dark-red",
+                  "index": 7,
+                  "text": "DOWN"
+                },
+                "9": {
+                  "color": "semi-dark-red",
+                  "index": 6,
+                  "text": "ROLLBACK"
+                },
+                "10": {
+                  "color": "semi-dark-red",
+                  "index": 5,
+                  "text": "REMOVED"
+                },
+                "null": {
+                  "color": "#FF7383",
+                  "index": 2,
+                  "text": "No data"
+                }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*members\\.0\\.state$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Member 0"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*members\\.1\\.state$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Member 1"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*members\\.2\\.state$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Member 2"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*members\\.3\\.state$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Member 3"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*members\\.4\\.state$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Member 4"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 1
+      },
+      "id": 54,
+      "options": {
+        "alignValue": "right",
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "mergeValues": true,
+        "rowHeight": 0.9,
+        "showValue": "auto",
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] =~ /replSetGetStatus\\.members\\.\\d+\\.state/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Member States",
+      "type": "state-timeline"
     },
     {
       "datasource": {
@@ -269,10 +484,10 @@
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 7,
-        "x": 6,
-        "y": 0
+        "h": 5,
+        "w": 12,
+        "x": 0,
+        "y": 6
       },
       "id": 16,
       "options": {
@@ -310,87 +525,48 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### ReplSet member states\n\n**`replSetGetStatus.members.N.state`** over the selected time range (same codes as [replica states](https://www.mongodb.com/docs/manual/reference/replica-states/)).\n\n**Note:** Row labels use member **array index** unless `members.N.name` is ingested. Failover shows PRIMARY moving between rows. Primary-only FTDC filter via **hostname**.\n\n---\n\n### Metrics\n\n**Fields:** `replSetGetStatus.members.0.state` … (through your max index)\n\n---\n\n### How to read\n\n- One row per member index\n- Colored band = role · **PRIMARY** (1), **SECONDARY** (2), etc.\n- Red bands = DOWN, RECOVERING, ROLLBACK, …\n\n---\n\n### Docs\n\n- [replSetGetStatus](https://www.mongodb.com/docs/manual/reference/command/replSetGetStatus/)",
+      "description": "### Asserts\n\nPer-second rate of **`serverStatus.asserts`** — mongod internal checks and user-triggered assertion counters.\n\n**Unit:** asserts/sec (`ops`)\n\n**Expectation:** normally **flat at zero**; any sustained non-zero rate warrants investigation.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`serverStatus.asserts.regular`\n`serverStatus.asserts.warning`\n`serverStatus.asserts.msg`\n`serverStatus.asserts.user`\n`serverStatus.asserts.rollovers`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**Rollovers:** count of times assert counters wrapped past 2³⁰ — spikes are rare and distinct from error asserts.\n\n---\n\n### How to read\n\n- **Regular** / **Msg** — internal mongod assertion failures (unusual)\n- **Warning** — non-fatal internal warnings\n- **User** — client-visible errors (duplicate key, validation, disk full, etc.)\n- **Rollovers** — counter wrap events, not application errors\n- Brief spikes on restart or deploy may appear as counter resets\n\n---\n\n### Troubleshooting\n\n- **Regular** or **Msg** sustained → possible bug or corruption · check mongod logs immediately\n- **User** spikes → application errors · correlate with app logs and **Operations**\n- Spike + **Server uptime** drop → crash/assert abort · **Replica Members Health**\n- Zero across all lines → healthy (typical)\n\nCorrelate with **Server uptime** and **Average Operation Latency**.\n\n---\n\n### Docs\n\n- [serverStatus — asserts](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.asserts)",
       "fieldConfig": {
         "defaults": {
           "color": {
-            "fixedColor": "blue",
-            "mode": "fixed"
+            "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
             "axisPlacement": "auto",
-            "fillOpacity": 100,
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
             "insertNulls": false,
-            "lineWidth": 0,
-            "spanNulls": false
-          },
-          "mappings": [
-            {
-              "options": {
-                "0": {
-                  "color": "semi-dark-red",
-                  "index": 11,
-                  "text": "STARTUP"
-                },
-                "1": {
-                  "color": "rgb(107, 152, 102)",
-                  "index": 4,
-                  "text": "PRIMARY"
-                },
-                "2": {
-                  "color": "rgb(193, 159, 20)",
-                  "index": 3,
-                  "text": "SECONDARY"
-                },
-                "3": {
-                  "color": "semi-dark-red",
-                  "index": 10,
-                  "text": "RECOVERING"
-                },
-                "5": {
-                  "color": "semi-dark-red",
-                  "index": 9,
-                  "text": "STARTUP2"
-                },
-                "6": {
-                  "color": "semi-dark-red",
-                  "index": 8,
-                  "text": "UNKNOWN"
-                },
-                "7": {
-                  "color": "#8B8000",
-                  "index": 1,
-                  "text": "ARBITER"
-                },
-                "8": {
-                  "color": "semi-dark-red",
-                  "index": 7,
-                  "text": "DOWN"
-                },
-                "9": {
-                  "color": "semi-dark-red",
-                  "index": 6,
-                  "text": "ROLLBACK"
-                },
-                "10": {
-                  "color": "semi-dark-red",
-                  "index": 5,
-                  "text": "REMOVED"
-                },
-                "null": {
-                  "color": "#FF7383",
-                  "index": 2,
-                  "text": "No data"
-                }
-              },
-              "type": "value"
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
             }
-          ],
+          },
+          "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
@@ -400,91 +576,116 @@
               }
             ]
           },
-          "unit": "short"
+          "unit": "ops"
         },
         "overrides": [
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*members\\.0\\.state$"
+              "options": ".*\\.regular$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Member 0"
+                "value": "Regular"
               }
             ]
           },
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*members\\.1\\.state$"
+              "options": ".*\\.warning$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Member 1"
+                "value": "Warning"
               }
             ]
           },
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*members\\.2\\.state$"
+              "options": ".*\\.msg$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Member 2"
+                "value": "Msg"
               }
             ]
           },
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*members\\.3\\.state$"
+              "options": ".*\\.user$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Member 3"
+                "value": "User"
               }
             ]
           },
           {
             "matcher": {
               "id": "byRegexp",
-              "options": ".*members\\.4\\.state$"
+              "options": ".*\\.rollovers$"
             },
             "properties": [
               {
                 "id": "displayName",
-                "value": "Member 4"
+                "value": "Rollovers"
+              }
+            ]
+          },
+          {
+            "__systemRef": "hideSeriesFrom",
+            "matcher": {
+              "id": "byNames",
+              "options": {
+                "mode": "exclude",
+                "names": [
+                  "Msg"
+                ],
+                "prefix": "All except:",
+                "readOnly": true
+              }
+            },
+            "properties": [
+              {
+                "id": "custom.hideFrom",
+                "value": {
+                  "legend": false,
+                  "tooltip": true,
+                  "viz": true
+                }
               }
             ]
           }
         ]
       },
       "gridPos": {
-        "h": 6,
-        "w": 11,
-        "x": 13,
-        "y": 0
+        "h": 5,
+        "w": 12,
+        "x": 12,
+        "y": 6
       },
-      "id": 54,
+      "id": 30,
       "options": {
-        "alignValue": "right",
         "legend": {
-          "displayMode": "list",
-          "placement": "bottom",
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "right",
           "showLegend": true
         },
-        "mergeValues": true,
-        "rowHeight": 0.9,
-        "showValue": "auto",
         "tooltip": {
           "hideZeros": false,
-          "mode": "single",
+          "mode": "multi",
           "sort": "none"
         }
       },
@@ -495,12 +696,12 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] =~ /replSetGetStatus\\.members\\.\\d+\\.state/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.asserts.regular\" or\r\n      r[\"_field\"] == \"serverStatus.asserts.warning\" or\r\n      r[\"_field\"] == \"serverStatus.asserts.msg\" or\r\n      r[\"_field\"] == \"serverStatus.asserts.user\" or\r\n      r[\"_field\"] == \"serverStatus.asserts.rollovers\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
           "refId": "A"
         }
       ],
-      "title": "Member States",
-      "type": "state-timeline"
+      "title": "Asserts",
+      "type": "timeseries"
     },
     {
       "collapsed": false,
@@ -508,7 +709,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 11
       },
       "id": 24,
       "panels": [],
@@ -609,7 +810,7 @@
         "h": 8,
         "w": 13,
         "x": 0,
-        "y": 7
+        "y": 12
       },
       "id": 1,
       "options": {
@@ -735,7 +936,7 @@
         "h": 8,
         "w": 11,
         "x": 13,
-        "y": 7
+        "y": 12
       },
       "id": 6,
       "options": {
@@ -775,7 +976,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Pages evicted\n\nRate of **modified** (dirty) and **unmodified** (clean) cache pages evicted per second. MongoDB docs note unmodified evictions as the main eviction statistic.\n\n**Unit:** pages/s (derivative of cumulative counters)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.wiredTiger.cache.modified pages evicted` · `serverStatus.wiredTiger.cache.unmodified pages evicted`\n\n---\n\n### How to read\n\n- **Modified pages evicted (dirty)** — evicted after write/reconciliation\n- **Unmodified pages evicted (clean)** — discarded without write\n\n---\n\n### Troubleshooting\n\n- Dirty eviction spikes → cache pressure, write latency · **WiredTiger Cache**, **Dirty Cache Bytes**\n- Eviction can't keep up → app threads may evict (performance cliff)\n\n---\n\n### Docs\n\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)\n- [WiredTiger storage engine](https://www.mongodb.com/docs/manual/core/wiredtiger/)",
+      "description": "### WiredTiger Pages Evicted\n\nRate of **modified** (dirty) and **unmodified** (clean) cache pages evicted per second. MongoDB docs note unmodified evictions as the main eviction statistic.\n\n**Unit:** pages/s (derivative of cumulative counters)\n\n---\n\n### Metrics\n\n**Fields:** `serverStatus.wiredTiger.cache.modified pages evicted` · `serverStatus.wiredTiger.cache.unmodified pages evicted`\n\n---\n\n### How to read\n\n- **Modified pages evicted (dirty)** — evicted after write/reconciliation\n- **Unmodified pages evicted (clean)** — discarded without write\n\n---\n\n### Troubleshooting\n\n- Dirty eviction spikes → cache pressure, write latency · **WiredTiger Cache**, **Dirty Cache Bytes**\n- Eviction can't keep up → app threads may evict (performance cliff)\n\n---\n\n### Docs\n\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)\n- [WiredTiger storage engine](https://www.mongodb.com/docs/manual/core/wiredtiger/)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -787,6 +988,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -823,10 +1025,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -863,7 +1061,7 @@
         "h": 7,
         "w": 13,
         "x": 0,
-        "y": 15
+        "y": 20
       },
       "id": 12,
       "options": {
@@ -890,11 +1088,11 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.wiredTiger.cache.modified pages evicted\" or r[\"_field\"] == \"serverStatus.wiredTiger.cache.unmodified pages evicted\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.wiredTiger.cache.modified pages evicted\" or r[\"_field\"] == \"serverStatus.wiredTiger.cache.unmodified pages evicted\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n",
           "refId": "A"
         }
       ],
-      "title": "Pages Evicted",
+      "title": "WiredTiger Pages Evicted",
       "type": "timeseries"
     },
     {
@@ -975,7 +1173,7 @@
         "h": 5,
         "w": 11,
         "x": 13,
-        "y": 15
+        "y": 20
       },
       "id": 26,
       "options": {
@@ -1063,10 +1261,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -1091,7 +1285,7 @@
         "h": 9,
         "w": 11,
         "x": 13,
-        "y": 20
+        "y": 25
       },
       "id": 7,
       "options": {
@@ -1215,7 +1409,7 @@
         "h": 7,
         "w": 13,
         "x": 0,
-        "y": 22
+        "y": 27
       },
       "id": 23,
       "options": {
@@ -1302,10 +1496,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -1330,7 +1520,7 @@
         "h": 7,
         "w": 13,
         "x": 0,
-        "y": 29
+        "y": 34
       },
       "id": 19,
       "options": {
@@ -1417,10 +1607,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -1457,7 +1643,7 @@
         "h": 7,
         "w": 11,
         "x": 13,
-        "y": 29
+        "y": 34
       },
       "id": 8,
       "options": {
@@ -1569,7 +1755,7 @@
         "h": 6,
         "w": 13,
         "x": 0,
-        "y": 36
+        "y": 41
       },
       "id": 48,
       "options": {
@@ -1658,10 +1844,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -1686,7 +1868,7 @@
         "h": 6,
         "w": 11,
         "x": 13,
-        "y": 36
+        "y": 41
       },
       "id": 49,
       "options": {
@@ -1726,7 +1908,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 42
+        "y": 47
       },
       "id": 22,
       "panels": [],
@@ -1823,7 +2005,7 @@
         "h": 7,
         "w": 10,
         "x": 0,
-        "y": 43
+        "y": 48
       },
       "id": 3,
       "options": {
@@ -1935,7 +2117,7 @@
         "h": 5,
         "w": 14,
         "x": 10,
-        "y": 43
+        "y": 48
       },
       "id": 28,
       "options": {
@@ -2096,7 +2278,7 @@
         "h": 6,
         "w": 14,
         "x": 10,
-        "y": 48
+        "y": 53
       },
       "id": 2,
       "options": {
@@ -2208,7 +2390,7 @@
         "h": 6,
         "w": 10,
         "x": 0,
-        "y": 50
+        "y": 55
       },
       "id": 27,
       "options": {
@@ -2319,7 +2501,7 @@
         "h": 6,
         "w": 14,
         "x": 10,
-        "y": 54
+        "y": 59
       },
       "id": 52,
       "options": {
@@ -2455,7 +2637,7 @@
         "h": 10,
         "w": 10,
         "x": 0,
-        "y": 56
+        "y": 61
       },
       "id": 5,
       "options": {
@@ -2656,7 +2838,7 @@
         "h": 6,
         "w": 14,
         "x": 10,
-        "y": 60
+        "y": 65
       },
       "id": 33,
       "options": {
@@ -2703,7 +2885,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Admin Commands (metrics.commands)\n\nPer-second rate of selected **`serverStatus.metrics.commands.*.total`** counters — admin/catalog-style commands tracked individually by MongoDB.\n\n**Not** the same as **Operations** (`opcounters.command`), which aggregates most command types except insert, update, delete, and aggregate.\n\n**Unit:** commands per second (`ops`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.commands.createIndexes.total`\n- `serverStatus.metrics.commands.dataSize.total`\n- `serverStatus.metrics.commands.dropIndexes.total`\n- `serverStatus.metrics.commands.listCollections.total`\n- `serverStatus.metrics.commands.listDatabases.total`\n- `serverStatus.metrics.commands.listIndexes.total`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → cmds/sec\n\n---\n\n### How to read\n\n- One line per command counter above\n- Spikes on **listCollections** / **listDatabases** / **listIndexes** → metadata/catalog traffic (drivers, tools, monitoring)\n- Spikes on **createIndexes** / **dropIndexes** → schema/index maintenance\n- **dataSize** → `dataSize` command usage\n\n---\n\n### Troubleshooting\n\n- Sustained high list* rates → chatty clients or health checks · compare with **Network Requests**\n- Index build bursts → **createIndexes** + **CPU Usage** + **Disk I/O**\n- For overall op mix, use **Operations**; for document volume, **Documents**\n\n---\n\n### Docs\n\n- [serverStatus — metrics.commands](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.commands)",
+      "description": "### Admin Commands (metrics.commands)\n\nPer-second rate of selected **`serverStatus.metrics.commands.*.total`** counters — admin/catalog-style commands tracked individually by MongoDB.\n\n**Not** the same as **Operations** (`opcounters.command`), which rolls up non-opcounter command traffic (**including aggregate**); this panel tracks specific `metrics.commands.*` counters individually.\n\n**Unit:** commands per second (`ops`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.commands.createIndexes.total`\n- `serverStatus.metrics.commands.dataSize.total`\n- `serverStatus.metrics.commands.dropIndexes.total`\n- `serverStatus.metrics.commands.listCollections.total`\n- `serverStatus.metrics.commands.listDatabases.total`\n- `serverStatus.metrics.commands.listIndexes.total`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → cmds/sec\n\n---\n\n### How to read\n\n- One line per command counter above\n- Spikes on **listCollections** / **listDatabases** / **listIndexes** → metadata/catalog traffic (drivers, tools, monitoring)\n- Spikes on **createIndexes** / **dropIndexes** → schema/index maintenance\n- **dataSize** → `dataSize` command usage\n\n---\n\n### Troubleshooting\n\n- Sustained high list* rates → chatty clients or health checks · compare with **Network Requests**\n- Index build bursts → **createIndexes** + **CPU Usage** + **Disk I/O**\n- For overall op mix, use **Operations**; for document volume, **Documents**\n\n---\n\n### Docs\n\n- [serverStatus — metrics.commands](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.commands)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2835,7 +3017,7 @@
         "h": 8,
         "w": 10,
         "x": 0,
-        "y": 66
+        "y": 71
       },
       "id": 32,
       "options": {
@@ -2874,7 +3056,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Replica members lag\n\nWall-clock replication lag per member:\n\n**Formula:** `(serverStatus.localTime − members.N.lastAppliedWallTime) / 1000` → **seconds**\n\nBoth timestamps are **milliseconds** in FTDC; the query converts the delta to seconds.\n\n**Unit:** seconds (`s`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.localTime`\n- `replSetGetStatus.members.0.lastAppliedWallTime` … `replSetGetStatus.members.4.lastAppliedWallTime`\n\nMember **N** is the array index in `replSetGetStatus.members` (not necessarily hostname order).\n\n---\n\n### How to read\n\n- One line per member index (0–4)\n- **~0** → caught up (primary or healthy secondary)\n- Rising trend on a secondary → replication falling behind\n- Flat **0** for missing index → no member in that slot\n\n---\n\n### Troubleshooting\n\n- Secondary lag rising → disk I/O, CPU, network on that node · **Opcounters Replica**, **Disk I/O**\n- Lag spikes during checkpoints → I/O contention\n- Primary throttling → **FlowControl isLagged** · **Replica Members Ping**\n- Member down → **Replica Members Health**\n\n---\n\n### Docs\n\n- [replSetGetStatus](https://www.mongodb.com/docs/manual/reference/command/replSetGetStatus/)\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)",
+      "description": "### Replica members lag\n\nWall-clock replication lag per member:\n\n**Formula:** `(serverStatus.localTime − members.N.lastAppliedWallTime) / 1000` → **seconds**\n\nBoth timestamps are **milliseconds** in FTDC; the query converts the delta to seconds.\n\n**Unit:** seconds (`s`)\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.localTime`\n- `replSetGetStatus.members.0.lastAppliedWallTime` … `replSetGetStatus.members.4.lastAppliedWallTime`\n\nMember **N** is the array index in `replSetGetStatus.members` (not necessarily hostname order).\n\n---\n\n### How to read\n\n- One line per member index (0–4)\n- **~0** → caught up (primary or healthy secondary)\n- Rising trend on a secondary → replication falling behind\n- **Gap** (not 0) for missing member slots — no `lastAppliedWallTime` in FTDC for that index\n\n---\n\n### Troubleshooting\n\n- Secondary lag rising → disk I/O, CPU, network on that node · **Opcounters Replica**, **Disk I/O**\n- Lag spikes during checkpoints → I/O contention\n- Primary throttling → **FlowControl isLagged** · **Replica Members Ping**\n- Member down → **Replica Members Health**\n\n---\n\n### Docs\n\n- [replSetGetStatus](https://www.mongodb.com/docs/manual/reference/command/replSetGetStatus/)\n- [serverStatus](https://www.mongodb.com/docs/manual/reference/command/serverStatus/)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -2995,7 +3177,7 @@
         "h": 7,
         "w": 14,
         "x": 10,
-        "y": 66
+        "y": 71
       },
       "id": 15,
       "options": {
@@ -3022,7 +3204,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] =~ /replSetGetStatus\\.members\\.\\d+\\.lastAppliedWallTime|serverStatus\\.localTime/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      member_0: if exists r[\"replSetGetStatus.members.0.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.0.lastAppliedWallTime\"])) / 1000.0 else 0.0,\r\n      member_1: if exists r[\"replSetGetStatus.members.1.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.1.lastAppliedWallTime\"])) / 1000.0 else 0.0,\r\n      member_2: if exists r[\"replSetGetStatus.members.2.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.2.lastAppliedWallTime\"])) / 1000.0 else 0.0,\r\n      member_3: if exists r[\"replSetGetStatus.members.3.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.3.lastAppliedWallTime\"])) / 1000.0 else 0.0,\r\n      member_4: if exists r[\"replSetGetStatus.members.4.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.4.lastAppliedWallTime\"])) / 1000.0 else 0.0,\r\n  }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] =~ /replSetGetStatus\\.members\\.\\d+\\.lastAppliedWallTime|serverStatus\\.localTime/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      member_0: if exists r[\"replSetGetStatus.members.0.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.0.lastAppliedWallTime\"])) / 1000.0 else float(v: \"NaN\"),\r\n      member_1: if exists r[\"replSetGetStatus.members.1.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.1.lastAppliedWallTime\"])) / 1000.0 else float(v: \"NaN\"),\r\n      member_2: if exists r[\"replSetGetStatus.members.2.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.2.lastAppliedWallTime\"])) / 1000.0 else float(v: \"NaN\"),\r\n      member_3: if exists r[\"replSetGetStatus.members.3.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.3.lastAppliedWallTime\"])) / 1000.0 else float(v: \"NaN\"),\r\n      member_4: if exists r[\"replSetGetStatus.members.4.lastAppliedWallTime\"] then (float(v: r[\"serverStatus.localTime\"]) - float(v: r[\"replSetGetStatus.members.4.lastAppliedWallTime\"])) / 1000.0 else float(v: \"NaN\"),\r\n  }))",
           "refId": "A"
         }
       ],
@@ -3155,7 +3337,7 @@
         "h": 6,
         "w": 14,
         "x": 10,
-        "y": 73
+        "y": 78
       },
       "id": 25,
       "options": {
@@ -3302,7 +3484,7 @@
         "h": 12,
         "w": 10,
         "x": 0,
-        "y": 74
+        "y": 79
       },
       "id": 36,
       "options": {
@@ -3428,10 +3610,10 @@
         ]
       },
       "gridPos": {
-        "h": 5,
-        "w": 14,
+        "h": 6,
+        "w": 7,
         "x": 10,
-        "y": 79
+        "y": 84
       },
       "id": 14,
       "options": {
@@ -3544,8 +3726,8 @@
       },
       "gridPos": {
         "h": 6,
-        "w": 14,
-        "x": 10,
+        "w": 7,
+        "x": 17,
         "y": 84
       },
       "id": 53,
@@ -3578,6 +3760,242 @@
         }
       ],
       "title": "Flow control lagged time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Oplog storage size\n\nDisk space allocated to the **`local.oplog.rs`** capped collection (`collStats` / `storageStats`). **Oplog storage size** is total allocation on disk; **Oplog free storage** is unused space within that allocation.\n\n**Unit:** bytes (`bytes`)\n\n**Not `dbStats.storageSize`:** FTDC exposes oplog **collStats** here, not per-database storage totals.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`local.oplog.rs.stats.storageStats.storageSize`\n`local.oplog.rs.stats.storageStats.freeStorageSize`\n\nSnapshot gauge — **`aggregateWindow(..., fn: last)`**, no derivative.\n\n---\n\n### How to read\n\n- **Oplog storage size** — grows as the capped oplog fills its on-disk allocation (does not shrink when entries roll off)\n- **Oplog free storage** — headroom within that allocation\n- **Used ≈ storage size − free storage** at each point\n- Flat **storage size** with falling **free storage** → oplog nearing capacity\n\n---\n\n### Troubleshooting\n\n- **Free storage** near zero → oplog cap pressure · replication lag risk on secondaries · **Oplog average entry size**, **Replica Members Lag**\n- Step growth in **storage size** → oplog resize or first-time allocation growth\n- High **storage size** + large **Oplog average entry size** → heavy write payloads · more replication I/O\n- **Arbiter / standalone** may show no or stale series\n\nCorrelate with **Operations (write source)**, **Oplog average entry size**, and **Documents**.\n\n---\n\n### Docs\n\n- [collStats — storageSize / freeStorageSize](https://www.mongodb.com/docs/manual/reference/command/collStats/)\n- [Change oplog size](https://www.mongodb.com/docs/manual/tutorial/change-oplog-size/)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.storageStats\\.storageSize$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Oplog storage size"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*freeStorageSize$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Oplog free storage"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 10,
+        "y": 90
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"local.oplog.rs.stats.storageStats.storageSize\" or\r\n      r[\"_field\"] == \"local.oplog.rs.stats.storageStats.freeStorageSize\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Oplog storage size",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Oplog average entry size\n\nAverage size in **bytes** of documents in the **`local.oplog.rs`** capped collection (`collStats` / `storageStats.avgObjSize`).\n\n**Unit:** bytes (`bytes`)\n\n**Not `dbStats.avgObjSize`:** FTDC exposes oplog collStats here, not per-database average user document size.\n\n---\n\n### Metrics\n\n**Field:** `local.oplog.rs.stats.storageStats.avgObjSize`\n\nSnapshot gauge — **`aggregateWindow(..., fn: last)`**, no derivative.\n\n---\n\n### How to read\n\n- Single line · **Oplog avg entry size**\n- Rises when writes carry larger payloads (big documents, wide updates, bulk ops)\n- Slow drift over days → changing write patterns or schema\n- Compare with **Oplog storage size** (`local.oplog.rs` `storageSize` / `freeStorageSize`)\n\n---\n\n### Troubleshooting\n\n- Step change + write workload shift → larger oplog entries · more replication network/disk\n- High avg size + lag → secondary apply pressure · check **Replica Members Lag**\n- **Arbiter / standalone** may show no or stale series (no meaningful oplog)\n- For **user collection** document sizing → `db.collection.stats().avgObjSize` (not in this FTDC export)\n\n---\n\n### Docs\n\n- [collStats — avgObjSize](https://www.mongodb.com/docs/manual/reference/command/collStats/)\n- [Change oplog size](https://www.mongodb.com/docs/manual/tutorial/change-oplog-size/)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "local.oplog.rs.stats.storageStats.avgObjSize"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Oplog avg entry size"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 7,
+        "x": 17,
+        "y": 90
+      },
+      "id": 34,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"local.oplog.rs.stats.storageStats.avgObjSize\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Oplog average entry size",
       "type": "timeseries"
     },
     {
@@ -3670,7 +4088,7 @@
         "h": 7,
         "w": 10,
         "x": 0,
-        "y": 86
+        "y": 91
       },
       "id": 29,
       "options": {
@@ -3806,10 +4224,10 @@
         ]
       },
       "gridPos": {
-        "h": 9,
-        "w": 14,
-        "x": 10,
-        "y": 90
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 98
       },
       "id": 31,
       "options": {
@@ -3848,119 +4266,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Oplog average entry size\n\nAverage size in **bytes** of documents in the **`local.oplog.rs`** capped collection (`collStats` / `storageStats.avgObjSize`).\n\n**Unit:** bytes (`bytes`)\n\n**Not `dbStats.avgObjSize`:** FTDC exposes oplog collStats here, not per-database average user document size.\n\n---\n\n### Metrics\n\n**Field:** `local.oplog.rs.stats.storageStats.avgObjSize`\n\nSnapshot gauge — **`aggregateWindow(..., fn: last)`**, no derivative.\n\n---\n\n### How to read\n\n- Single line · **Oplog avg entry size**\n- Rises when writes carry larger payloads (big documents, wide updates, bulk ops)\n- Slow drift over days → changing write patterns or schema\n- Compare with **Storage Size** (`local.oplog.rs` `storageSize` / `freeStorageSize`)\n\n---\n\n### Troubleshooting\n\n- Step change + write workload shift → larger oplog entries · more replication network/disk\n- High avg size + lag → secondary apply pressure · check **Replica Members Lag**\n- **Arbiter / standalone** may show no or stale series (no meaningful oplog)\n- For **user collection** document sizing → `db.collection.stats().avgObjSize` (not in this FTDC export)\n\n---\n\n### Docs\n\n- [collStats — avgObjSize](https://www.mongodb.com/docs/manual/reference/command/collStats/)\n- [Change oplog size](https://www.mongodb.com/docs/manual/tutorial/change-oplog-size/)",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "local.oplog.rs.stats.storageStats.avgObjSize"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Oplog avg entry size"
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 10,
-        "x": 0,
-        "y": 93
-      },
-      "id": 34,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r[\"_field\"] == \"local.oplog.rs.stats.storageStats.avgObjSize\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
-          "refId": "A"
-        }
-      ],
-      "title": "Oplog average entry size",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "### Operations (opcounters)\n\nPer-second rate of **`serverStatus.opcounters`** — **operation-level** counts (one bulk/multi-doc op = one op). Not the same as **Documents** (`metrics.document`), which counts documents touched.\n\n**Unit:** operations per second (`ops`)\n\n**Note:** `opcounters.command` includes most commands except insert, update, delete, and **aggregate** (see MongoDB docs).\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.opcounters.command`\n- `serverStatus.opcounters.delete`\n- `serverStatus.opcounters.getmore`\n- `serverStatus.opcounters.insert`\n- `serverStatus.opcounters.query`\n- `serverStatus.opcounters.update`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → ops/sec\n\n---\n\n### How to read\n\n- Six lines: command, delete, getmore, insert, query, update **rates**\n- Sudden drop → blocking or idle period\n- Spike → load burst; check **Average Operation Latency** and **WiredTiger Tickets**\n\n---\n\n### Troubleshooting\n\n- Sustained high write ops + latency → **Current Queue writers / readers**, disk I/O\n- High **query** + **getmore** → cursor-heavy workload\n- On secondaries, use **Opcounters Replica** instead of this panel\n\n---\n\n### Docs\n\n- [serverStatus — opcounters](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opcounters)",
+      "description": "### Operations (opcounters)\n\nPer-second rate of **`serverStatus.opcounters`** — **operation-level** counts (one bulk/multi-doc op = one op). Not the same as **Documents** (`metrics.document`), which counts documents touched.\n\n**Unit:** operations per second (`ops`)\n\n**Note:** `opcounters.command` counts commands **not** already tracked as insert, update, delete, query, or getmore — **including aggregate** and other admin/catalog commands.\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.opcounters.command`\n- `serverStatus.opcounters.delete`\n- `serverStatus.opcounters.getmore`\n- `serverStatus.opcounters.insert`\n- `serverStatus.opcounters.query`\n- `serverStatus.opcounters.update`\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → ops/sec\n\n---\n\n### How to read\n\n- Six lines: command, delete, getmore, insert, query, update **rates**\n- Sudden drop → blocking or idle period\n- Spike → load burst; check **Average Operation Latency** and **WiredTiger Tickets**\n\n---\n\n### Troubleshooting\n\n- Sustained high write ops + latency → **Current Queue writers / readers**, disk I/O\n- High **query** + **getmore** → cursor-heavy workload\n- On secondaries, use **Opcounters Replica** instead of this panel\n\n---\n\n### Docs\n\n- [serverStatus — opcounters](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.opcounters)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4092,7 +4398,7 @@
         "h": 11,
         "w": 12,
         "x": 0,
-        "y": 99
+        "y": 105
       },
       "id": 9,
       "options": {
@@ -4263,7 +4569,7 @@
         "h": 11,
         "w": 12,
         "x": 12,
-        "y": 99
+        "y": 105
       },
       "id": 38,
       "options": {
@@ -4398,7 +4704,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 110
+        "y": 116
       },
       "id": 10,
       "options": {
@@ -4437,7 +4743,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "### Query targeting: scanned objects / returned\n\nRatio of **document scan rate** to **document return rate**:\n\n**Formula:** `derivative(scannedObjects, 1s) / derivative(document.returned, 1s)`\n\nSame idea as **totalDocsExamined / docs returned** in explain() — aggregated over time.\n\n**Unit:** dimensionless ratio (`none`) — **1.0** ≈ one doc examined per doc returned\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.queryExecutor.scannedObjects`\n- `serverStatus.metrics.document.returned`\n\nBoth are cumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`** before the ratio.\n\n---\n\n### How to read\n\n- Single line · **Scanned / returned ratio**\n- **~1** → strong targeting (most examined docs were returned)\n- **> 1** (especially **10+**) → scans dominate · missing/poor indexes or large in-memory filters\n- **0** → no returned docs in window (idle) or zero denominator — **not** “perfect”\n\n---\n\n### Troubleshooting\n\n- High ratio + high **Documents returned** → **Query Executor** · run `explain()` on hot queries\n- Correlate with **Page Faults**, **Disk I/O**, **Average Operation Latency**\n- **Collection scans** panel (if present) confirms full collection scans\n\n---\n\n### Docs\n\n- [serverStatus — metrics.queryExecutor](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.queryExecutor)\n- [serverStatus — metrics.document](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.document)",
+      "description": "### Query targeting: scanned objects / returned\n\nRatio of **document scan rate** to **document return rate**:\n\n**Formula:** `derivative(scannedObjects, 1s) / derivative(document.returned, 1s)`\n\nSame idea as **totalDocsExamined / docs returned** in explain() — aggregated over time.\n\n**Unit:** dimensionless ratio (`none`) — **1.0** ≈ one doc examined per doc returned\n\n---\n\n### Metrics\n\n**Fields:**\n\n- `serverStatus.metrics.queryExecutor.scannedObjects`\n- `serverStatus.metrics.document.returned`\n\nBoth are cumulative counters; query uses **`derivative(unit: 1s, nonNegative: true)`** before the ratio.\n\n---\n\n### How to read\n\n- Single line · **Scanned / returned ratio**\n- **~1** → strong targeting (most examined docs were returned)\n- **> 1** (especially **10+**) → scans dominate · missing/poor indexes or large in-memory filters\n- **Gap** (not 0) → no returned docs in window or zero denominator — **not** “perfect”\n\n---\n\n### Troubleshooting\n\n- High ratio + high **Documents returned** → **Query Executor** · run `explain()` on hot queries\n- Correlate with **Page Faults**, **Disk I/O**, **Average Operation Latency**\n- **Collection scans** on **Query Executor** (right axis) confirms full collection scans\n\n---\n\n### Docs\n\n- [serverStatus — metrics.queryExecutor](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.queryExecutor)\n- [serverStatus — metrics.document](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.metrics.document)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4510,7 +4816,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 119
+        "y": 125
       },
       "id": 37,
       "options": {
@@ -4537,7 +4843,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.document.returned\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      scanned_returned_ratio:\r\n        if exists r[\"serverStatus.metrics.document.returned\"]\r\n           and float(v: r[\"serverStatus.metrics.document.returned\"]) > 0.0\r\n           and exists r[\"serverStatus.metrics.queryExecutor.scannedObjects\"]\r\n        then float(v: r[\"serverStatus.metrics.queryExecutor.scannedObjects\"])\r\n             / float(v: r[\"serverStatus.metrics.document.returned\"])\r\n        else 0.0\r\n    }))",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.metrics.document.returned\" or\r\n      r[\"_field\"] == \"serverStatus.metrics.queryExecutor.scannedObjects\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      scanned_returned_ratio:\r\n        if exists r[\"serverStatus.metrics.document.returned\"]\r\n           and float(v: r[\"serverStatus.metrics.document.returned\"]) > 0.0\r\n           and exists r[\"serverStatus.metrics.queryExecutor.scannedObjects\"]\r\n        then float(v: r[\"serverStatus.metrics.queryExecutor.scannedObjects\"])\r\n             / float(v: r[\"serverStatus.metrics.document.returned\"])\r\n        else float(v: \"NaN\")\r\n    }))",
           "refId": "A"
         }
       ],
@@ -4550,7 +4856,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 125
+        "y": 131
       },
       "id": 21,
       "panels": [],
@@ -4562,7 +4868,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "CPU utilization from systemMetrics.cpu, broken down by user, system, and iowait as a percentage of total CPU time. These are derived from the OS-level CPU counters exposed through FTDC (systemMetrics).\n\nHow to read: three lines showing percentage of CPU time spent in user mode (application), system/kernel mode, and iowait (waiting on disk).\n\nTroubleshooting: high 'user' CPU typically means heavy query processing (sorts, aggregations, index builds). High 'iowait' means the CPU is blocked waiting on disk -- correlate with 'Disk I/O' and 'WiredTiger Block Manager'. High 'system' may indicate excessive context switching from too many threads/connections.",
+      "description": "### CPU usage\n\nHost CPU time by mode, from FTDC **systemMetrics** (OS counters in milliseconds). Each line is that mode’s share of total CPU time in the window after per-mode `derivative(1s)`.\n\n**Formula:** `aggregateWindow(last)` → `pivot` → `derivative(*_ms, 1s)` → `(mode_ms / total_ms) × 100`\n\n**Unit:** percent (`percent`, 0–100)\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.cpu.user_ms`\n`systemMetrics.cpu.system_ms`\n`systemMetrics.cpu.iowait_ms`\n`systemMetrics.cpu.idle_ms`\n`systemMetrics.cpu.nice_ms`\n`systemMetrics.cpu.softirq_ms`\n`systemMetrics.cpu.steal_ms`\n\n**Plotted:** user, system, iowait percentages only. Idle, nice, softirq, and steal are included in **total_ms** (denominator) but not shown as separate lines.\n\n**Query type:** computed ratio (not a single counter derivative). Output uses `_field` / `_value` via `union` for Grafana.\n\n---\n\n### How to read\n\n- **User %** — application time (mongod, queries, aggregations)\n- **System (kernel) %** — kernel time, syscalls, context switching\n- **I/O wait %** — CPU idle while waiting on disk\n- Three lines sum to **≤ 100%** (unplotted modes account for the rest)\n\n---\n\n### Troubleshooting\n\n- High **User %** with **Operations** or **Query Executor** → CPU-bound workload\n- High **I/O wait %** → disk bottleneck · **Disk I/O**, **WiredTiger Block Manager**, **Page Faults**\n- High **System %** with many **Connections** → thread/syscall overhead\n- VM steal not plotted — inspect raw `systemMetrics.cpu.steal_ms` in Explore if host may be oversubscribed\n\nCorrelate with **mongod Memory (RSS / Virtual)** and **System Memory**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4574,6 +4880,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4609,10 +4916,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -4624,7 +4927,7 @@
         "h": 9,
         "w": 24,
         "x": 0,
-        "y": 126
+        "y": 132
       },
       "id": 13,
       "options": {
@@ -4651,7 +4954,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r._field == \"systemMetrics.cpu.idle_ms\" or r._field == \"systemMetrics.cpu.user_ms\" or r._field == \"systemMetrics.cpu.iowait_ms\" or r._field == \"systemMetrics.cpu.nice_ms\" or r._field == \"systemMetrics.cpu.softirq_ms\" or r._field == \"systemMetrics.cpu.steal_ms\" or r._field == \"systemMetrics.cpu.system_ms\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n  |> derivative(unit: 1s, nonNegative: true, columns: [\"systemMetrics.cpu.idle_ms\", \"systemMetrics.cpu.user_ms\", \"systemMetrics.cpu.iowait_ms\", \"systemMetrics.cpu.nice_ms\", \"systemMetrics.cpu.softirq_ms\", \"systemMetrics.cpu.steal_ms\", \"systemMetrics.cpu.system_ms\"])\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      idle_ms: r[\"systemMetrics.cpu.idle_ms\"],\r\n      user_ms: r[\"systemMetrics.cpu.user_ms\"],\r\n      iowait_ms: r[\"systemMetrics.cpu.iowait_ms\"],\r\n      nice_ms: r[\"systemMetrics.cpu.nice_ms\"],\r\n      softirq_ms: r[\"systemMetrics.cpu.softirq_ms\"],\r\n      steal_ms: r[\"systemMetrics.cpu.steal_ms\"],\r\n      system_ms: r[\"systemMetrics.cpu.system_ms\"],\r\n      total_ms: r[\"systemMetrics.cpu.idle_ms\"] + r[\"systemMetrics.cpu.user_ms\"] + r[\"systemMetrics.cpu.iowait_ms\"] + r[\"systemMetrics.cpu.nice_ms\"] + r[\"systemMetrics.cpu.softirq_ms\"] + r[\"systemMetrics.cpu.steal_ms\"] + r[\"systemMetrics.cpu.system_ms\"]\r\n  }))\r\n  |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      user: 100.0 * float(v: r.user_ms) / float(v: r.total_ms),\r\n      system: 100.0 * float(v: r.system_ms) / float(v: r.total_ms),\r\n      iowait: 100.0 * float(v: r.iowait_ms) / float(v: r.total_ms),\r\n  }))\r\n",
+          "query": "base =\r\n  from(bucket: v.defaultBucket)\r\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n    |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n    |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n    |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n    |> filter(fn: (r) =>\r\n        r._field == \"systemMetrics.cpu.idle_ms\" or\r\n        r._field == \"systemMetrics.cpu.user_ms\" or\r\n        r._field == \"systemMetrics.cpu.iowait_ms\" or\r\n        r._field == \"systemMetrics.cpu.nice_ms\" or\r\n        r._field == \"systemMetrics.cpu.softirq_ms\" or\r\n        r._field == \"systemMetrics.cpu.steal_ms\" or\r\n        r._field == \"systemMetrics.cpu.system_ms\")\r\n    |> drop(columns: [\"hostname\", \"version\"])\r\n    |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n    |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n    |> derivative(\r\n        unit: 1s,\r\n        nonNegative: true,\r\n        columns: [\r\n          \"systemMetrics.cpu.idle_ms\",\r\n          \"systemMetrics.cpu.user_ms\",\r\n          \"systemMetrics.cpu.iowait_ms\",\r\n          \"systemMetrics.cpu.nice_ms\",\r\n          \"systemMetrics.cpu.softirq_ms\",\r\n          \"systemMetrics.cpu.steal_ms\",\r\n          \"systemMetrics.cpu.system_ms\",\r\n        ],\r\n      )\r\n    |> map(fn: (r) => ({\r\n        _time: r._time,\r\n        user_ms: float(v: r[\"systemMetrics.cpu.user_ms\"]),\r\n        system_ms: float(v: r[\"systemMetrics.cpu.system_ms\"]),\r\n        iowait_ms: float(v: r[\"systemMetrics.cpu.iowait_ms\"]),\r\n        total_ms:\r\n          float(v: r[\"systemMetrics.cpu.idle_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.user_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.iowait_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.nice_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.softirq_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.steal_ms\"]) +\r\n          float(v: r[\"systemMetrics.cpu.system_ms\"]),\r\n      }))\r\n\r\nunion(tables: [\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"User %\",\r\n      _value: if r.total_ms > 0.0 then 100.0 * r.user_ms / r.total_ms else 0.0,\r\n    })),\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"System (kernel) %\",\r\n      _value: if r.total_ms > 0.0 then 100.0 * r.system_ms / r.total_ms else 0.0,\r\n    })),\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"I/O wait %\",\r\n      _value: if r.total_ms > 0.0 then 100.0 * r.iowait_ms / r.total_ms else 0.0,\r\n    })),\r\n])\r\n  |> group(columns: [\"_field\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
           "refId": "A"
         }
       ],
@@ -4663,7 +4966,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "System-level memory metrics from systemMetrics (derived from /proc/meminfo). Shows available and free memory at the OS level (systemMetrics).\n\nHow to read: multiple lines showing memory categories over time.\n\nTroubleshooting: if available memory is low and swap is active, the system is under memory pressure affecting all processes including mongod. Compare with 'mongod Memory (RSS / Virtual)' to determine how much system RAM is consumed by the database vs other services.",
+      "description": "### System memory\n\nHost RAM from FTDC **systemMetrics** (`/proc/meminfo`, values stored as **kB**). Shows how much memory the OS reports as **available** vs **free**.\n\n**Unit:** bytes (Grafana auto-scale; FTDC fields are `*_kb`, query multiplies by 1024)\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.memory.MemAvailable_kb`\n`systemMetrics.memory.MemFree_kb`\n\n**MemAvailable** — estimate of memory startable for new workloads without swapping (includes reclaimable cache).\n\n**MemFree** — completely unallocated pages (often much lower than available).\n\n---\n\n### How to read\n\n- **Memory available** — primary signal for OS headroom\n- **Memory free** — strictly idle RAM; low free + healthy available is normal on Linux\n- Both lines fall when mongod, page cache, or other services consume RAM\n\n---\n\n### Troubleshooting\n\n- **Available** trending toward zero → memory pressure · **Swap Memory**, **Page Faults**, **WiredTiger Cache**\n- Available low but **mongod Memory (RSS / Virtual)** moderate → other processes or OS page cache\n- Available and free both low + high **CPU Usage** I/O wait → possible thrashing\n- After mongod restart, available may jump as RSS is released\n\nCorrelate with **mongod Memory (RSS / Virtual)** and **Swap Memory**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [meminfo](https://www.kernel.org/doc/html/latest/admin-guide/mm/memory-model.html) — `MemAvailable` vs `MemFree`",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4675,6 +4978,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4703,6 +5007,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -4710,22 +5015,43 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "bytes"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*MemAvailable_kb$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory available"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*MemFree_kb$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Memory free"
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 135
+        "y": 141
       },
       "id": 40,
       "options": {
@@ -4752,7 +5078,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.memory.MemAvailable_kb\" or r[\"_field\"] == \"systemMetrics.memory.MemFree_kb\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")",
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"systemMetrics.memory.MemAvailable_kb\" or\r\n      r[\"_field\"] == \"systemMetrics.memory.MemFree_kb\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) * 1024.0 }))",
           "refId": "A"
         }
       ],
@@ -4764,7 +5090,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "Swap space usage from systemMetrics (systemMetrics).\n\nHow to read: lines showing swap used and swap total over time.\n\nTroubleshooting: ANY swap usage on a MongoDB server is a critical concern. Swapping replaces nanosecond RAM access with millisecond disk access, causing order-of-magnitude latency increases. If swap is in use, check 'System Memory' for overall pressure and consider increasing RAM or reducing WiredTiger cache size (--wiredTigerCacheSizeGB) to leave more memory for the OS page cache.",
+      "description": "### Swap memory\n\nHost swap from FTDC **systemMetrics** (`/proc/meminfo`, values stored as **kB**). Shows **used**, **free**, and **total** swap capacity. **Swap used** is computed as `SwapTotal − SwapFree`.\n\n**Unit:** bytes (Grafana auto-scale; FTDC fields are `*_kb`, query multiplies by 1024)\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.memory.SwapTotal_kb`\n`systemMetrics.memory.SwapFree_kb`\n\n**Computed:** Swap used = `SwapTotal_kb − SwapFree_kb` (not a separate FTDC field)\n\n**Plotted:** Swap used (computed) · Swap free · Swap total\n\n---\n\n### How to read\n\n- **Swap used** — should stay at **0** on a MongoDB host\n- **Swap free** — unused swap capacity\n- **Swap total** — configured swap size (may be **0** if swap is disabled)\n- **Swap used + Swap free ≈ Swap total** at each point\n\n---\n\n### Troubleshooting\n\n- **Any sustained Swap used > 0** → critical · RAM pressure · latency spikes\n- Correlate with **System Memory**, **Page Faults**, **mongod Memory (RSS / Virtual)**, **WiredTiger Cache**\n- High **CPU Usage** I/O wait + swap → severe thrashing\n- Remediation: add RAM, reduce `--wiredTigerCacheSizeGB`, fix memory leaks, stop co-located heavy processes\n- **Swap total = 0** → swap disabled (common on tuned MongoDB VMs)\n\nCorrelate with **System Memory** and **Average Operation Latency**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- [MongoDB production notes — memory](https://www.mongodb.com/docs/manual/administration/production-notes/#std-label-production-notes-memory)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4776,6 +5102,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4804,6 +5131,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -4811,14 +5139,10 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
-          "unit": "deckbytes"
+          "unit": "bytes"
         },
         "overrides": []
       },
@@ -4826,7 +5150,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 135
+        "y": 141
       },
       "id": 39,
       "options": {
@@ -4853,7 +5177,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.memory.SwapFree_kb\" or r[\"_field\"] == \"systemMetrics.memory.SwapTotal_kb\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")",
+          "query": "base =\r\n  from(bucket: v.defaultBucket)\r\n    |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n    |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n    |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n    |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n    |> filter(fn: (r) =>\r\n        r[\"_field\"] == \"systemMetrics.memory.SwapFree_kb\" or\r\n        r[\"_field\"] == \"systemMetrics.memory.SwapTotal_kb\")\r\n    |> drop(columns: [\"hostname\", \"version\"])\r\n    |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n    |> pivot(rowKey: [\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")\r\n    |> map(fn: (r) => ({\r\n        _time: r._time,\r\n        swap_total_kb: float(v: r[\"systemMetrics.memory.SwapTotal_kb\"]),\r\n        swap_free_kb: float(v: r[\"systemMetrics.memory.SwapFree_kb\"]),\r\n        swap_used_kb:\r\n          float(v: r[\"systemMetrics.memory.SwapTotal_kb\"]) -\r\n          float(v: r[\"systemMetrics.memory.SwapFree_kb\"]),\r\n      }))\r\n\r\nunion(tables: [\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"Swap used\",\r\n      _value: r.swap_used_kb * 1024.0,\r\n    })),\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"Swap free\",\r\n      _value: r.swap_free_kb * 1024.0,\r\n    })),\r\n  base |> map(fn: (r) => ({\r\n      _time: r._time,\r\n      _field: \"Swap total\",\r\n      _value: r.swap_total_kb * 1024.0,\r\n    })),\r\n])\r\n  |> group(columns: [\"_field\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)",
           "refId": "A"
         }
       ],
@@ -4865,7 +5189,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "Shows dbStats.storageSize -- the sum of disk space allocated to all collections for document storage, including free space. Per MongoDB docs, storageSize does not decrease when documents are removed or shrunk; it may be smaller than dataSize on WiredTiger with compression enabled. storageSize does not include indexes -- see indexSize (dbStats).\n\nHow to read: single line showing storage allocation over time.\n\nTroubleshooting: sudden growth may indicate unexpected data ingestion or large index creation. Compare with 'avg Obj Size' and 'Documents' panel rates. Slow steady growth is normal.",
+      "description": "### Disk writes and reads\n\nPer-device **IOPS** (read/write operations per second) from FTDC **systemMetrics** (`/proc/diskstats` cumulative `reads` / `writes` counters).\n\n**Unit:** IOPS (`iops`) — `derivative(unit: 1s)` on OS counters\n\n**Not mongod-only:** includes all processes on the host (OS view).\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host):**\n\n`systemMetrics.disks.<device>.reads`\n`systemMetrics.disks.<device>.writes`\n\nExample: `systemMetrics.disks.xvda.reads` · `systemMetrics.disks.sdb.writes`\n\nAll disk stats matching the exporter’s disk allowlist are ingested automatically (no per-device entries in `metrics_to_get.txt`).\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → IOPS\n\n---\n\n### How to read\n\n- One line per **device · reads** and **device · writes**\n- Spikes during WiredTiger **checkpoints** (~60s) are normal on the data volume\n- Many small IOPS + low byte throughput → small random I/O · compare **Disk I/O**\n\n---\n\n### Troubleshooting\n\n- Sustained high IOPS + high **CPU Usage** I/O wait → disk saturation\n- High reads → cache misses · **WiredTiger Block Manager**, **Page Faults**\n- High writes → checkpoints/eviction · **Checkpoint Write Throughput**, **WiredTiger Pages Evicted**\n- Correlate with **Disk I/O** (bytes/sec) and **Disk I/O Busy Time / Disk Queue Time** panels\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -4877,6 +5201,7 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -4912,111 +5237,6 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "bytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 143
-      },
-      "id": 35,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"local.oplog.rs.stats.storageStats.freeStorageSize\" or r[\"_field\"] == \"local.oplog.rs.stats.storageStats.storageSize\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> yield(name: \"mean\")",
-          "refId": "A"
-        }
-      ],
-      "title": "Storage Size",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of disk read and write operations per second (IOPS) per device from systemMetrics.disks.*.reads and systemMetrics.disks.*.writes (systemMetrics).\n\nHow to read: lines showing IOPS per device.\n\nTroubleshooting: high IOPS approaching device limits causes increased latency. Compare with 'Disk I/O' (bytes) to determine if the workload is many small I/O operations vs fewer large ones. SSD and HDD have very different IOPS limits (hundreds of thousands vs hundreds).",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
@@ -5025,10 +5245,10 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 143
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 149
       },
       "id": 17,
       "options": {
@@ -5055,7 +5275,7 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..*\\.writes$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.reads$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: 1s)\r\n",
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.reads$/ or\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.writes$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value),\r\n      _field:\r\n        if strings.hasSuffix(v: r._field, suffix: \".reads\") then\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".reads\",\r\n          ) + \" reads\"\r\n        else\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".writes\",\r\n          ) + \" writes\",\r\n    }))",
           "refId": "A"
         }
       ],
@@ -5067,209 +5287,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "Rate of TCP segments received (InSegs) and sent (OutSegs) per second from systemMetrics.netstat.Tcp (systemMetrics.netstat).\n\nHow to read: two lines showing TCP segment rates.\n\nTroubleshooting: shows raw TCP-level traffic volume. A high InSegs/OutSegs ratio on a secondary indicates it receives more replication data than it sends. Sudden drops indicate network outages. Compare with 'Network In / Out' for application-level context.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 16,
-        "y": 143
-      },
-      "id": 43,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.netstat.Tcp:InSegs\" or r[\"_field\"] == \"systemMetrics.netstat.Tcp:OutSegs\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        }
-      ],
-      "title": "TCP: InSegs / OutSegs",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.network.bytesIn and network.bytesOut per second. Per MongoDB docs, bytesIn is the total number of logical bytes received; bytesOut is the total logical bytes sent. Logical bytes are the exact number of bytes in the data (serverStatus.network).\n\nHow to read: two lines showing logical network throughput in bytes/sec.\n\nTroubleshooting: large bytesOut may indicate queries returning too much data -- check query projections and limit clauses. Compare logical vs physical bytes to assess compression ratio.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 150
-      },
-      "id": 4,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.network.bytesOut\" or r[\"_field\"] == \"serverStatus.network.bytesIn\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> map(fn: (r) => ({ r with _value: r._value / 1024 /1024 }))\r\n  |> derivative(unit: 1s)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Network In / Out",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Disk write throughput per device from systemMetrics.disks (systemMetrics).\n\nHow to read: lines showing write bytes/sec per device.\n\nTroubleshooting: periodic write spikes every ~60 seconds correlate with WiredTiger checkpoints and are normal. Sustained high writes between checkpoints indicate heavy write workloads or eviction pressure. Compare with 'Dirty Cache Bytes' and 'Pages Evicted'.",
+      "description": "### Disk I/O\n\nPer-device **read/write throughput** from FTDC **systemMetrics** (`/proc/diskstats` cumulative sector counters).\n\n**Formula:** `derivative(read_sectors|write_sectors, 1s) × 512` → **bytes/sec**\n\n**Unit:** B/s (`Bps`) — Linux diskstats sectors are **512 bytes** each\n\n**Not mongod-only:** OS view of all processes on the host.\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host):**\n\n`systemMetrics.disks.<device>.read_sectors`\n`systemMetrics.disks.<device>.write_sectors`\n\nExample: `systemMetrics.disks.xvda.read_sectors` · `systemMetrics.disks.sdb.write_sectors`\n\nDisk metrics are ingested via the exporter disk allowlist (no per-device lines in `metrics_to_get.txt`).\n\n**Query:** `derivative(..., unit: 1s, nonNegative: true)` → sectors/s → × 512 → B/s\n\n---\n\n### How to read\n\n- One line per **device · read** and **device · write** throughput\n- Write spikes every ~**60s** → WiredTiger **checkpoints** (normal on data volume)\n- High B/s + low IOPS → large sequential I/O · compare **Disk writes and reads**\n- High B/s + high IOPS → random or mixed workload\n\n---\n\n### Troubleshooting\n\n- Sustained high throughput + **CPU Usage** I/O wait → disk bandwidth saturation\n- Read-heavy → cache pressure · **WiredTiger Block Manager**, **Page Faults**\n- Write-heavy → **Checkpoint Write Throughput**, **Pages Evicted**\n- Queueing / busy time → **Disk Queue Time**, **Disk I/O Busy Time** (not this panel)\n\nCorrelate with **Disk writes and reads** (IOPS) and **WiredTiger Block Manager**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -5310,6 +5328,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -5317,333 +5336,18 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          }
+          },
+          "unit": "Bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 150
-      },
-      "id": 46,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.write_sectors$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.write_time_ms$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.writes_merged$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.io_in_progress$/ )\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n\r\n\r\n\r\n",
-          "refId": "B"
-        }
-      ],
-      "title": "Disk Writes",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.network.physicalBytesIn and network.physicalBytesOut per second. Per MongoDB docs, physicalBytesIn is the total number of physical bytes received over network connections; physicalBytesOut is the total physical bytes sent. Physical bytes are the bytes that actually reside on disk (serverStatus.network).\n\nHow to read: two lines showing physical network throughput in bytes/sec.\n\nTroubleshooting: compare with 'Network In / Out' (logical bytes) to assess compression effectiveness. Saturation of network bandwidth causes connection timeouts and replication lag. Spikes without corresponding operation increases may indicate replication catch-up or background traffic.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "decbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 0,
-        "y": 156
-      },
-      "id": 11,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.network.physicalBytesIn\" or r[\"_field\"] == \"serverStatus.network.physicalBytesOut\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n",
-          "refId": "A"
-        }
-      ],
-      "title": "Network In / Out Physical",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "TCP connection lifecycle counters from systemMetrics.netstat: Tcp.ActiveOpens (new outgoing connections initiated), Tcp.AttemptFails (connection attempts that failed), Tcp.EstabResets (established connections that were reset) (systemMetrics.netstat).\n\nHow to read: three lines showing rates per second.\n\nTroubleshooting: high AttemptFails indicates the server or peers are refusing connections. High EstabResets indicates established connections being unexpectedly terminated -- check for replica member crashes, network partitions, or firewall issues. Correlate with 'Replica Members Health'.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 157
-      },
-      "id": 41,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.netstat.Tcp:ActiveOpens\" or r[\"_field\"] == \"systemMetrics.netstat.Tcp:AttemptFails\" or r[\"_field\"] == \"systemMetrics.netstat.Tcp:EstabResets\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        }
-      ],
-      "title": "TCP ActiveOpens / AttemptFails / EstabResets",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Disk throughput in bytes per second per device from systemMetrics.disks (systemMetrics).\n\nHow to read: lines showing read and write throughput per device.\n\nTroubleshooting: high throughput during WiredTiger checkpoint intervals (default 60s) is expected. Sustained high throughput outside checkpoints indicates cache misses or heavy write workloads. Compare with 'Disk Writes and Reads' (IOPS) for a complete picture of disk saturation.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "axisSoftMin": 0,
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 0,
-        "y": 161
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 149
       },
       "id": 47,
       "options": {
@@ -5670,17 +5374,8 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.io_in_progress$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.io_queued_ms$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.io_time_ms$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.read_sectors$/ or\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.write_sectors$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value) * 512.0,\r\n      _field:\r\n        if strings.hasSuffix(v: r._field, suffix: \".read_sectors\") then\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".read_sectors\",\r\n          ) + \" read\"\r\n        else\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".write_sectors\",\r\n          ) + \" write\",\r\n    }))",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.io_in_progress$/ )\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n\r\n\r\n\r\n",
-          "refId": "B"
         }
       ],
       "title": "Disk I/O",
@@ -5691,109 +5386,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "TCP connection error metrics from systemMetrics.netstat (systemMetrics.netstat).\n\nHow to read: lines showing error rates per second.\n\nTroubleshooting: increasing values indicate problems establishing or maintaining TCP connections between MongoDB nodes or clients. Correlate with 'Replica Members Health', 'Replica Members Ping', and application connection error logs.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "min": 0,
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 8,
-        "x": 8,
-        "y": 164
-      },
-      "id": 45,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.netstat.Tcp:CurrEstab\" or r[\"_field\"] == \"systemMetrics.netstat.Tcp:EstabResets\" or r[\"_field\"] == \"systemMetrics.netstat.Tcp:OutRsts\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        }
-      ],
-      "title": "TCP Connection Issues",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Disk read throughput per device from systemMetrics.disks (systemMetrics).\n\nHow to read: lines showing read bytes/sec per device.\n\nTroubleshooting: high disk reads indicate data not served from WiredTiger cache. Correlate with 'Cache Read/Write Throughput' (bytes read into cache) to confirm. Persistent high reads suggest the working set exceeds the configured cache size.",
+      "description": "### Disk reads\n\nPer-device **read throughput** from FTDC **systemMetrics** (`/proc/diskstats` cumulative `read_sectors` counter).\n\n**Formula:** `derivative(read_sectors, 1s) × 512` → **bytes/sec**\n\n**Unit:** B/s (`Bps`) — Linux diskstats sectors are **512 bytes** each\n\n**Not mongod-only:** OS view of all processes on the host (not `serverStatus`).\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host — regex filter):**\n\n`systemMetrics.disks.<device>.read_sectors`\n\nExample: `systemMetrics.disks.xvda.read_sectors`\n\nIngested via exporter disk allowlist (`isDiskMetric`); no per-device entries in `metrics_to_get.txt`.\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)` → × 512\n\n**Not this panel:** `read_time_ms` → **Disk I/O Busy Time** · `.reads` IOPS → **Disk writes and reads**\n\n---\n\n### How to read\n\n- One line per device · legend **`{device} read`**\n- Sustained high reads → cold data / cache misses · working set vs RAM\n- High B/s + low read IOPS → large sequential reads · compare **Disk writes and reads**\n\n---\n\n### Troubleshooting\n\n- High reads + **Page Faults** → memory pressure\n- High reads + **WiredTiger Cache** full → increase cache or RAM\n- High reads + **CPU Usage** I/O wait → disk bandwidth · **Disk I/O**, **Disk I/O Busy Time**\n- Mongod-specific reads → **WiredTiger Block Manager** (bytes read)\n\nCorrelate with **Disk I/O** (combined read/write B/s).\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -5834,6 +5427,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -5841,21 +5435,18 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
-          }
+          },
+          "unit": "Bps"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 8,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 168
+        "y": 157
       },
       "id": 18,
       "options": {
@@ -5882,17 +5473,8 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.read_sectors$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.read_time_ms$/  or r._field =~ /^systemMetrics\\.disks\\..*\\.reads_merged$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..+\\.read_sectors$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value) * 512.0,\r\n      _field:\r\n        strings.trimSuffix(\r\n          v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n          suffix: \".read_sectors\",\r\n        ) + \" read\",\r\n    }))",
           "refId": "A"
-        },
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "hide": false,
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) =>  r._field =~ /^systemMetrics\\.disks\\..*\\.io_in_progress$/ )\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n\r\n\r\n\r\n",
-          "refId": "B"
         }
       ],
       "title": "Disk Reads",
@@ -5903,7 +5485,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "Disk I/O queue time per device from systemMetrics.disks.*.io_queued_ms. This counter represents cumulative milliseconds that I/O requests have spent waiting in the queue (systemMetrics).\n\nHow to read: lines showing queued time per device as a rate (ms of queue time per second). Values approaching 1000 ms/s indicate persistent queueing.\n\nTroubleshooting: high queue depth is a direct saturation signal -- it means I/O requests are waiting because the device cannot keep up. This is often the root cause of latency spikes. Correlate with 'Disk Latency' and 'Disk I/O'.",
+      "description": "### Disk writes\n\nPer-device **write throughput** from FTDC **systemMetrics** (`/proc/diskstats` cumulative `write_sectors` counter).\n\n**Formula:** `derivative(write_sectors, 1s) × 512` → **bytes/sec**\n\n**Unit:** B/s (`Bps`) — Linux diskstats sectors are **512 bytes** each\n\n**Not mongod-only:** OS view of all processes on the host (not `serverStatus`).\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host — regex filter):**\n\n`systemMetrics.disks.<device>.write_sectors`\n\nExample: `systemMetrics.disks.xvda.write_sectors`\n\nIngested via exporter disk allowlist (`isDiskMetric`).\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)` → × 512\n\n**Not this panel:** `write_time_ms` → **Disk I/O Busy Time** · `.writes` IOPS → **Disk writes and reads**\n\n---\n\n### How to read\n\n- One line per device · legend **`{device} write`**\n- Spikes every ~**60s** → WiredTiger **checkpoints** on data volume (normal)\n- Sustained high writes between spikes → heavy write load or eviction\n\n---\n\n### Troubleshooting\n\n- Write spikes + latency → checkpoint I/O · **Checkpoint Write Throughput**, **Checkpoint Duration**\n- Sustained high writes → **Dirty Cache Bytes**, **Pages Evicted**, **Operations**\n- High write B/s + high **CPU Usage** I/O wait → disk bandwidth · **Disk I/O**, **Disk I/O Busy Time**\n\nCorrelate with **Disk I/O** (combined read/write B/s) and **WiredTiger Block Manager**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -5914,6 +5496,105 @@
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 157
+      },
+      "id": 46,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..+\\.write_sectors$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value) * 512.0,\r\n      _field:\r\n        strings.trimSuffix(\r\n          v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n          suffix: \".write_sectors\",\r\n        ) + \" write\",\r\n    }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Disk Writes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Disk queue time\n\nPer-device **I/O queue wait time rate** from FTDC **systemMetrics** (`/proc/diskstats` cumulative `io_queued_ms` counter).\n\n**Formula:** `derivative(io_queued_ms, 1s)` → **ms/s** (milliseconds of queue wait accrued per wall-clock second)\n\n**Unit:** ms/s — **not** in-flight I/O count · **not** `read_time_ms` / `write_time_ms` (**Disk I/O Busy Time**)\n\n**Not mongod-only:** OS view of all processes on the host.\n\n**Saturation hint:** sustained values toward **~1000 ms/s** → persistent queueing on that device.\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host — regex filter):**\n\n`systemMetrics.disks.<device>.io_queued_ms`\n\nExample: `systemMetrics.disks.xvda.io_queued_ms`\n\nIngested via exporter disk allowlist (`isDiskMetric`).\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**In-flight I/O count:** `systemMetrics.disks.<device>.io_in_progress` (gauge) — not plotted here.\n\n---\n\n### How to read\n\n- One line per device · **`{device} queue time`** (ms/s)\n- Rising queue time + flat throughput → device falling behind\n- Spikes with checkpoint windows → normal on data volume if brief\n\n---\n\n### Troubleshooting\n\n- Sustained high ms/s → disk saturation · **Disk I/O Busy Time**, **Disk I/O**, **CPU Usage** I/O wait\n- Queue time up + **Average Operation Latency** up → storage bottleneck\n- Queue time without high B/s → random/small I/O or slow device · **Disk writes and reads**\n\nCorrelate with **Disk I/O Busy Time** and **Disk I/O**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "ms/s",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "barWidthFactor": 0.6,
@@ -5943,6 +5624,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -5950,22 +5632,18 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
-          "unit": "ms"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 8,
-        "y": 171
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 165
       },
       "id": 51,
       "options": {
@@ -5992,11 +5670,11 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..*\\.io_queued_ms$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: 1s)\r\n",
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..+\\.io_queued_ms$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value),\r\n      _field:\r\n        strings.trimSuffix(\r\n          v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n          suffix: \".io_queued_ms\",\r\n        ) + \" queue time\",\r\n    }))",
           "refId": "A"
         }
       ],
-      "title": "Disk Queue Depth",
+      "title": "Disk Queue Time",
       "type": "timeseries"
     },
     {
@@ -6004,7 +5682,7 @@
         "type": "influxdb",
         "uid": "P3C6603E967DC8568"
       },
-      "description": "TCP packet integrity counters from systemMetrics.netstat: Tcp.InCsumErrors, Tcp.InErrs, Tcp.RetransSegs, Ip.InDiscards, Ip.OutDiscards (systemMetrics.netstat).\n\nHow to read: lines showing error rates per second.\n\nTroubleshooting: RetransSegs (retransmissions) indicate packet loss, directly causing latency spikes visible in 'Average Operation Latency' and 'Replica Members Ping'. InCsumErrors indicate data corruption on the wire. InDiscards/OutDiscards indicate kernel buffer overflows. Any sustained increase points to network hardware issues, congestion, or NIC driver/firmware bugs.",
+      "description": "### Disk I/O busy time\n\nPer-device **I/O service time rate** from FTDC **systemMetrics** (`/proc/diskstats` cumulative `read_time_ms` / `write_time_ms` counters).\n\n**Formula:** `derivative(read_time_ms|write_time_ms, 1s)` → **ms/s** (milliseconds of I/O time accrued per wall-clock second)\n\n**Unit:** ms/s — **not** average latency per operation · **not** `serverStatus.opLatencies`\n\n**Not mongod-only:** OS view of all processes on the host.\n\n**Saturation hint:** values approaching **~1000 ms/s** on a line → device spending ~100% of wall time in that I/O direction.\n\n---\n\n### Metrics\n\n**Pattern (device names vary by host — regex filter):**\n\n`systemMetrics.disks.<device>.read_time_ms`\n`systemMetrics.disks.<device>.write_time_ms`\n\nExample: `systemMetrics.disks.xvda.read_time_ms` · `systemMetrics.disks.sdb.write_time_ms`\n\nIngested via exporter disk allowlist (`isDiskMetric`).\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**Not this panel:** queue wait → **Disk Queue Time** (`io_queued_ms`) · throughput → **Disk I/O** · IOPS → **Disk writes and reads**\n\n---\n\n### How to read\n\n- One line per device · **read time** / **write time** (ms/s)\n- Write spikes ~every **60s** → checkpoint I/O on data volume (normal)\n- High ms/s + high **Disk I/O** B/s → bandwidth-heavy workload\n- High ms/s + high IOPS → random/small I/O or saturation\n\n---\n\n### Troubleshooting\n\n- Sustained high ms/s → disk busy · **Disk Queue Time**, **CPU Usage** I/O wait\n- High ms/s + rising **Average Operation Latency** → storage bottleneck\n- High read time + **Page Faults** → cache / memory pressure\n- High write time + **Checkpoint Write Throughput** → checkpoint / eviction pressure\n\nCorrelate with **Disk I/O**, **Disk writes and reads**, and **Disk Queue Time**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [diskstats](https://www.kernel.org/doc/html/latest/admin-guide/iostats.html)",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -6014,8 +5692,9 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
-            "axisLabel": "",
+            "axisLabel": "ms/s",
             "axisPlacement": "auto",
+            "axisSoftMin": 0,
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
@@ -6044,6 +5723,7 @@
               "mode": "off"
             }
           },
+          "decimals": 1,
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
@@ -6051,324 +5731,18 @@
               {
                 "color": "green",
                 "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
               }
             ]
           },
           "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 0,
-        "y": 175
-      },
-      "id": 42,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.netstat.Tcp:InCsumErrors\" \r\n                    or r[\"_field\"] == \"systemMetrics.netstat.Tcp:InErrs\"\r\n                    or r[\"_field\"] == \"systemMetrics.netstat.Tcp:RetransSegs\"\r\n                    or r[\"_field\"] == \"systemMetrics.netstat.Ip:InDiscards\"\r\n                    or r[\"_field\"] == \"systemMetrics.netstat.Ip:OutDiscards\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        }
-      ],
-      "title": "TCP Packet Loss or Corruption",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Rate of serverStatus.asserts by type: regular, warning, msg, user, rollovers. Per MongoDB docs, assertions are internal checks for errors that occur while the database is operating. Non-zero values are uncommon. asserts.user are errors clients may generate (e.g., out of disk space, duplicate key). asserts.rollovers counts how many times assert counters have rolled over after 2^30 assertions (serverStatus.asserts).\n\nHow to read: multiple lines showing assert rate/sec per type.\n\nTroubleshooting: any sustained increase in regular or msg asserts may indicate bugs or data corruption -- examine the MongoDB log. High user asserts indicate application-level errors (duplicate keys, validation failures). Check application logs for corresponding errors.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          }
         },
         "overrides": []
       },
       "gridPos": {
         "h": 7,
-        "w": 7,
-        "x": 8,
-        "y": 177
-      },
-      "id": 30,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"serverStatus.asserts.warning\" or r[\"_field\"] == \"serverStatus.asserts.user\" or r[\"_field\"] == \"serverStatus.asserts.rollovers\" or r[\"_field\"] == \"serverStatus.asserts.regular\" or r[\"_field\"] == \"serverStatus.asserts.msg\")\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: v.windowPeriod)\r\n    |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)",
-          "refId": "A"
-        }
-      ],
-      "title": "Asserts",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "TCP/IP routing error counters from systemMetrics.netstat: InNoRoutes, InTruncatedPkts, and related fields (systemMetrics.netstat).\n\nHow to read: lines showing error rates per second (derivatives of cumulative counters).\n\nTroubleshooting: any non-zero derivative indicates network configuration problems -- misrouted packets, MTU issues, or firewall interference. These are rare but can cause intermittent connectivity failures that are very difficult to diagnose at the application level.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 5,
-        "w": 8,
-        "x": 0,
-        "y": 180
-      },
-      "id": 44,
-      "options": {
-        "legend": {
-          "calcs": [
-            "min",
-            "max",
-            "mean"
-          ],
-          "displayMode": "table",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.3.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "influxdb",
-            "uid": "P3C6603E967DC8568"
-          },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r[\"_field\"] == \"systemMetrics.netstat.Ip:OutNoRoutes\" )\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: v.windowPeriod)",
-          "refId": "A"
-        }
-      ],
-      "title": "TCP Routing Issues",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "influxdb",
-        "uid": "P3C6603E967DC8568"
-      },
-      "description": "Disk I/O latency per device from systemMetrics.disks.*.read_time_ms and write_time_ms. These counters represent cumulative milliseconds spent on I/O operations (systemMetrics).\n\nHow to read: lines showing time spent on reads and writes per device, as a rate (ms of I/O time per second). Values approaching 1000 ms/s indicate the device is saturated.\n\nTroubleshooting: high disk latency directly causes operation latency increases in MongoDB. Correlate with 'Disk Writes and Reads' (IOPS) and 'Disk I/O' (throughput) to understand if latency is from volume or device saturation.",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": 0
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "ms"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 8,
-        "x": 0,
-        "y": 185
+        "w": 12,
+        "x": 12,
+        "y": 165
       },
       "id": 50,
       "options": {
@@ -6395,11 +5769,828 @@
             "type": "influxdb",
             "uid": "P3C6603E967DC8568"
           },
-          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n |> filter(fn: (r) => r._field =~ /^systemMetrics\\.disks\\..*\\.read_time_ms$/ or r._field =~ /^systemMetrics\\.disks\\..*\\.write_time_ms$/)\r\n |> drop(columns: [\"hostname\", \"version\"])\r\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\r\n  |> derivative(unit: 1s)\r\n",
+          "query": "import \"strings\"\r\n\r\nfrom(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.read_time_ms$/ or\r\n      r._field =~ /^systemMetrics\\.disks\\..+\\.write_time_ms$/)\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({\r\n      r with\r\n      _value: float(v: r._value),\r\n      _field:\r\n        if strings.hasSuffix(v: r._field, suffix: \".read_time_ms\") then\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".read_time_ms\",\r\n          ) + \" read time\"\r\n        else\r\n          strings.trimSuffix(\r\n            v: strings.trimPrefix(v: r._field, prefix: \"systemMetrics.disks.\"),\r\n            suffix: \".write_time_ms\",\r\n          ) + \" write time\",\r\n    }))",
           "refId": "A"
         }
       ],
-      "title": "Disk Latency",
+      "title": "Disk I/O Busy Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### TCP segments in / out\n\nPer-second rates of **Tcp:InSegs** and **Tcp:OutSegs** from FTDC **systemMetrics** (`/proc/net/snmp`).\n\n**Unit:** segments/s (`ops`)\n\n**Not mongod-only:** whole-host TCP stack.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.netstat.Tcp:InSegs`\n`systemMetrics.netstat.Tcp:OutSegs`\n\n**Query:** `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n---\n\n### How to read\n\n- **TCP segments in** / **TCP segments out** — raw TCP-level volume\n- High In/Out ratio on a secondary → receives more replication than it sends\n\n---\n\n### Troubleshooting\n\n- Sudden drops → network outage\n- Compare with **Network In / Out** (application bytes) and **Replica Members Ping**\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "ops"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*InSegs$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP segments in"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*OutSegs$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP segments out"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 172
+      },
+      "id": 43,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:InSegs\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:OutSegs\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "TCP segments in / out",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Network In / Out\n\nPer-second **logical** network throughput for **mongod** — cumulative **`serverStatus.network.bytesIn`** / **`bytesOut`**.\n\n**Unit:** B/s (`Bps`) — `derivative(unit: 1s)` on byte counters\n\n**Logical bytes:** BSON/document size as counted by mongod (not necessarily on-wire size). Compare with **Network Physical In / Out** for compression/wire bytes.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`serverStatus.network.bytesIn`\n`serverStatus.network.bytesOut`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n---\n\n### How to read\n\n- **Logical bytes in** — data received by mongod\n- **Logical bytes out** — data sent to clients / other nodes\n- Secondary: often **in ≥ out** during replication catch-up\n- Primary: **out** rises with large query results or replication fan-out\n\n---\n\n### Troubleshooting\n\n- High **bytes out** + high **Documents** returned → large result sets · check projections/`limit`\n- High bytes + low **Operations** → big payloads per op\n- Logical ≫ physical on **Network Physical In / Out** → compression effective (normal)\n- Logical ≈ physical → little compression · replication or already-compressed payloads\n- Bytes flat but lag → **Replica Members Lag**, **TCP InSegs / OutSegs**, **Replica Members Ping**\n\nCorrelate with **Network requests** and **Operations**.\n\n---\n\n### Docs\n\n- [serverStatus — network](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.network)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.bytesIn$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Logical bytes in"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*\\.bytesOut$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Logical bytes out"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 172
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.network.bytesIn\" or\r\n      r[\"_field\"] == \"serverStatus.network.bytesOut\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Network In / Out",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### Network In / Out Physical\n\nPer-second **physical (on-the-wire)** network throughput for **mongod** — cumulative **`serverStatus.network.physicalBytesIn`** / **`physicalBytesOut`**.\n\n**Unit:** B/s (`Bps`) — `derivative(unit: 1s)` on byte counters\n\n**Physical vs logical:** **Physical** = bytes sent/received on network connections (wire size, after compression where applicable). **Logical** = document/BSON bytes as counted by mongod · compare **Network In / Out**.\n\n**Not disk I/O:** network bytes, not storage · see **Disk I/O** for block device throughput.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`serverStatus.network.physicalBytesIn`\n`serverStatus.network.physicalBytesOut`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n---\n\n### How to read\n\n- **Physical bytes in** — wire bytes received by mongod\n- **Physical bytes out** — wire bytes sent by mongod\n- **Logical > physical** on paired panels → compression saving bandwidth (common on replication)\n- **Logical ≈ physical** → little compression benefit on the wire\n\n---\n\n### Troubleshooting\n\n- High physical **out** on primary → replication + client traffic · **Replica Members Lag**, **TCP InSegs / OutSegs**\n- High physical **in** on secondary → replication catch-up\n- Physical throughput near link capacity → timeouts, lag · **Replica Members Ping**\n- High physical + low **Operations** → large compressed payloads or oplog batches\n\nCorrelate with **Network In / Out** (logical) and **Network requests**.\n\n---\n\n### Docs\n\n- [serverStatus — network](https://www.mongodb.com/docs/manual/reference/command/serverStatus/#mongodb-serverstatus-serverstatus.network)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 1,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*physicalBytesIn$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Physical bytes in"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*physicalBytesOut$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "Physical bytes out"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 172
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"serverStatus.network.physicalBytesIn\" or\r\n      r[\"_field\"] == \"serverStatus.network.physicalBytesOut\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "Network In / Out Physical",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### TCP connection lifecycle\n\nPer-second rates of host **TCP connection lifecycle counters** from FTDC **systemMetrics** (`/proc/net/snmp`).\n\n**Unit:** events/sec — `derivative(unit: 1s, nonNegative: true)` on cumulative counters\n\n**Not mongod-only:** whole-host TCP stack.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.netstat.Tcp:ActiveOpens`\n`systemMetrics.netstat.Tcp:AttemptFails`\n`systemMetrics.netstat.Tcp:EstabResets`\n`systemMetrics.netstat.Tcp:OutRsts`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**Not this panel:** `Tcp:CurrEstab` (open connection **count**, gauge — use `last`, not derivative)\n\n---\n\n### How to read\n\n- **TCP active opens** — successful new connections initiated (normally **> 0** on a busy host)\n- **TCP connect failures** — failed connection attempts (expect **~0**)\n- **TCP established resets** — established connections reset (expect **~0**)\n- **TCP RST sent** — segments with RST flag (expect **~0**)\n- Brief spikes during deploys/restarts are normal\n\n---\n\n### Troubleshooting\n\n- Sustained **AttemptFails** → refused connections · firewall, `ulimit`, mongod down, wrong port\n- **EstabResets** / **RST sent** → mid-connection drops · **Replica Members Health**, node restarts\n- High **ActiveOpens** with errors → churny clients or replication mesh · compare **TCP InSegs / OutSegs**\n- With **TCP Packet Loss or Corruption** → loss before reset\n- With lag → **Replica Members Lag**, **Replica Members Ping**\n\nCorrelate with **TCP InSegs / OutSegs** and **Replica Members Health**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [SNMP-TCP-MIB / netstat](https://www.kernel.org/doc/html/latest/networking/snmp_counter.html)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "events/s",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*AttemptFails$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP connect failures"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*EstabResets$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP established resets"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*ActiveOpens$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP active opens"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*OutRsts$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP RST sent"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 179
+      },
+      "id": 45,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:ActiveOpens\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:AttemptFails\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:EstabResets\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:OutRsts\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "TCP Connection lifecycle",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### TCP routing issues\n\nPer-second rates of host **IP routing and fragmentation error counters** from FTDC **systemMetrics** (`/proc/net/snmp`).\n\n**Unit:** events/sec — `derivative(unit: 1s)` on cumulative counters\n\n**Layer note:** these are **IP** counters (title says “TCP routing” historically). **Not mongod-only.**\n\n**Expectation:** normally **flat at zero**; any sustained rate → routing, MTU, or path problems.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.netstat.Ip:OutNoRoutes`\n`systemMetrics.netstat.Ip:FragFails`\n`systemMetrics.netstat.Ip:ReasmFails`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**Not ingested (optional FTDC `IpExt` paths):** `IpExt:InNoRoutes` · `IpExt:InTruncatedPkts` — add to `metrics_to_get.txt` if present in your `metrics.txt`\n\n**Not this panel:** `Ip:InDiscards` / `Ip:OutDiscards` → **TCP Packet Loss or Corruption**\n\n---\n\n### How to read\n\n- **IP no route (out)** — packets dropped with no route to destination\n- **IP fragmentation failures** — could not fragment (often **MTU / PMTU** issues)\n- **IP reassembly failures** — fragmented packets could not be reassembled\n\n---\n\n### Troubleshooting\n\n- **OutNoRoutes** → wrong/missing routes, asymmetric routing, firewall blackholes\n- **FragFails** / **ReasmFails** → **MTU mismatch** (VPN, cloud network, jumbo frames)\n- With **TCP Packet Loss or Corruption** → broader stack problems\n- Intermittent app errors → **Replica Members Ping**, **TCP Connection Issues**\n\nCorrelate with **TCP InSegs / OutSegs** and **Replica Members Health**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [SNMP / netstat counters](https://www.kernel.org/doc/html/latest/networking/snmp_counter.html)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "events/s",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*OutNoRoutes$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP no route (out)"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*FragFails$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP fragmentation failures"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*ReasmFails$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP reassembly failures"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 8,
+        "y": 179
+      },
+      "id": 44,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"systemMetrics.netstat.Ip:OutNoRoutes\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Ip:FragFails\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Ip:ReasmFails\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "TCP Routing Issues",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "influxdb",
+        "uid": "P3C6603E967DC8568"
+      },
+      "description": "### TCP packet loss or corruption\n\nPer-second rates of host **TCP/IP error and discard counters** from FTDC **systemMetrics** (`/proc/net/snmp`).\n\n**Unit:** events/sec — `derivative(unit: 1s)` on cumulative counters\n\n**Not mongod-only:** whole-host TCP/IP stack (all processes).\n\n**Expectation:** normally **flat at zero**; any sustained non-zero rate warrants investigation.\n\n---\n\n### Metrics\n\n**Fields:**\n\n`systemMetrics.netstat.Tcp:InCsumErrors`\n`systemMetrics.netstat.Tcp:InErrs`\n`systemMetrics.netstat.Tcp:RetransSegs`\n`systemMetrics.netstat.Ip:InDiscards`\n`systemMetrics.netstat.Ip:OutDiscards`\n\n**Query type:** cumulative counter → `derivative(unit: 1s, nonNegative: true)` → `aggregateWindow(mean)`\n\n**Optional (in `metrics_to_get.txt`, not plotted):** `Ip:FragFails` · `Ip:ReasmFails` (fragmentation/reassembly failures)\n\n---\n\n### How to read\n\n- **TCP retransmissions** — packet loss / timeout on the wire (most common “loss” signal)\n- **TCP checksum errors** — corrupted frames received\n- **TCP input errors** — other inbound TCP errors\n- **IP discards** — kernel dropped packets (buffers, policy, congestion)\n\n---\n\n### Troubleshooting\n\n- **RetransSegs** sustained → loss/congestion · **Replica Members Ping**, **Average Operation Latency**\n- **InCsumErrors** → bad cable/NIC/driver, offload bugs\n- **InDiscards** / **OutDiscards** → buffer pressure · NIC ring, `netdev_max_backlog`, flood traffic\n- Errors + high **TCP InSegs / OutSegs** → saturated or failing path\n- Errors on one member only → host/NIC/path to that node · **Replica Members Health**\n\nCorrelate with **TCP InSegs / OutSegs** and **TCP Connection Issues**.\n\n---\n\n### Docs\n\n- FTDC **systemMetrics** (OS-level; not `serverStatus`)\n- Linux [SNMP / netstat counters](https://www.kernel.org/doc/html/latest/networking/snmp_counter.html)",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "events/s",
+            "axisPlacement": "auto",
+            "axisSoftMin": 0,
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "decimals": 2,
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "none"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*InCsumErrors$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP checksum errors"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Tcp:InErrs$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP input errors"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*RetransSegs$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "TCP retransmissions"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Ip:InDiscards$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP inbound discards"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": ".*Ip:OutDiscards$"
+            },
+            "properties": [
+              {
+                "id": "displayName",
+                "value": "IP outbound discards"
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 16,
+        "y": 179
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "calcs": [
+            "min",
+            "max",
+            "mean"
+          ],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "multi",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.2",
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": "P3C6603E967DC8568"
+          },
+          "query": "from(bucket: v.defaultBucket)\r\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\r\n  |> filter(fn: (r) => r[\"_measurement\"] == \"ftdc\")\r\n  |> filter(fn: (r) => r[\"hostname\"] =~ /^${hostname:regex}$/)\r\n  |> filter(fn: (r) => r[\"version\"] =~ /^${version:regex}$/)\r\n  |> filter(fn: (r) =>\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:InCsumErrors\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:InErrs\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Tcp:RetransSegs\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Ip:InDiscards\" or\r\n      r[\"_field\"] == \"systemMetrics.netstat.Ip:OutDiscards\")\r\n  |> drop(columns: [\"hostname\", \"version\"])\r\n  |> derivative(unit: 1s, nonNegative: true)\r\n  |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)\r\n  |> map(fn: (r) => ({ r with _value: float(v: r._value) }))",
+          "refId": "A"
+        }
+      ],
+      "title": "TCP Packet Loss or Corruption",
       "type": "timeseries"
     }
   ],
