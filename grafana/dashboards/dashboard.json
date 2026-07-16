@@ -1031,31 +1031,31 @@
           "unit": "pages/s"
         },
         "overrides": [
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": ".*modified pages evicted$"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Modified pages evicted (dirty)"
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byRegexp",
-              "options": ".*unmodified pages evicted$"
-            },
-            "properties": [
-              {
-                "id": "displayName",
-                "value": "Unmodified pages evicted (clean)"
-              }
-            ]
-          }
-        ]
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "serverStatus.wiredTiger.cache.modified pages evicted"
+    },
+    "properties": [
+      {
+        "id": "displayName",
+        "value": "Modified pages evicted (dirty)"
+      }
+    ]
+  },
+  {
+    "matcher": {
+      "id": "byName",
+      "options": "serverStatus.wiredTiger.cache.unmodified pages evicted"
+    },
+    "properties": [
+      {
+        "id": "displayName",
+        "value": "Unmodified pages evicted (clean)"
+      }
+    ]
+  }
+]
       },
       "gridPos": {
         "h": 7,
